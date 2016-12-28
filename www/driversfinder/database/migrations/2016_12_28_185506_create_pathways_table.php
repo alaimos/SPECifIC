@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -17,7 +16,6 @@ class CreatePathwaysTable extends Migration
             $table->increments('id');
             $table->string('accession')->index();
             $table->string('name');
-            $table->timestamps();
         });
     }
 
