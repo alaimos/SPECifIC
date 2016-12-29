@@ -11,6 +11,7 @@ _ide_helper.php
 /www/driversfinder/node_modules/
 /www/driversfinder/bootstrap/cache/
 /www/driversfinder/storage/
+/www/driversfinder/resources/data/
 .DS_Store
 .AppleDouble
 .LSOverride

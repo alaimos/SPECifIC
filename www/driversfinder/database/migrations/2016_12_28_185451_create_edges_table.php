@@ -13,10 +13,11 @@ class CreateEdgesTable extends Migration
     public function up()
     {
         Schema::create('edges', function (Blueprint $table) {
-            $table->increments('id');
+            $table->string('id', 33);
             $table->integer('start_id')->unsigned()->index();
             $table->integer('end_id')->unsigned()->index();
             $table->longText('types');
+            $table->primary('id');
             $table->index(['start_id', 'end_id']);
             $table->foreign('start_id')->references('id')->on('nodes')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('end_id')->references('id')->on('nodes')->onDelete('cascade')->onUpdate('cascade');

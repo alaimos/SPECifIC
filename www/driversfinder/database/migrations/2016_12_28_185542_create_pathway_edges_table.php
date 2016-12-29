@@ -14,7 +14,7 @@ class CreatePathwayEdgesTable extends Migration
     {
         Schema::create('pathway_edges', function (Blueprint $table) {
             $table->integer('pathway_id')->unsigned();
-            $table->integer('edge_id')->unsigned();
+            $table->string('edge_id', 33);
             $table->primary(['pathway_id', 'edge_id']);
             $table->foreign('pathway_id')->references('id')->on('pathways')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('edge_id')->references('id')->on('edges')->onDelete('cascade')->onUpdate('cascade');

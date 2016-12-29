@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Edge
  *
- * @property int                                                                 $id
+ * @property string                                                              $id
  * @property int                                                                 $start_id
  * @property int                                                                 $end_id
  * @property array                                                               $types
@@ -22,6 +22,27 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Edge extends Model
 {
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['start_id', 'end_id', 'types'];
+
+    /**
+     * The "type" of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
 
     /**
      * The attributes that should be cast to native types.
@@ -67,6 +88,41 @@ class Edge extends Model
     public function pathways()
     {
         return $this->belongsToMany('App\Models\Pathway', 'pathway_edges', 'edge_id', 'pathway_id');
+    }
+
+    /**
+     * Compute Edge internal identifier
+     *
+     * @param string $start
+     * @param string $end
+     * @return string
+     */
+    public static function computeId($start, $end)
+    {
+        return md5($start . '->' . $end);
+    }
+
+    /**
+     * Generate Id for this edge
+     *
+     * @return $this
+     */
+    public function generateId()
+    {
+        $this->id = self::computeId($this->start_id, $this->end_id);
+        return $this;
+    }
+
+    /**
+     * Save the model to the database.
+     *
+     * @param  array $options
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        $this->generateId();
+        return parent::save($options);
     }
 
 

@@ -20,6 +20,14 @@ use Illuminate\Database\Eloquent\Model;
 class Pathway extends Model
 {
 
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['accession', 'name'];
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -28,7 +36,7 @@ class Pathway extends Model
     public $timestamps = false;
 
     /**
-     * Edges in this pathway
+     * Nodes in this pathway
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

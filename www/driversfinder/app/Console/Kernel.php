@@ -2,6 +2,9 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ImportDiseases;
+use App\Console\Commands\ImportPathways;
+use App\Console\Commands\IndexPathways;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,13 +16,15 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        IndexPathways::class,
+        ImportPathways::class,
+        ImportDiseases::class,
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)

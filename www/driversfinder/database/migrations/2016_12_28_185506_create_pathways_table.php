@@ -14,7 +14,7 @@ class CreatePathwaysTable extends Migration
     {
         Schema::create('pathways', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('accession')->index();
+            $table->string('accession')->unique();
             $table->string('name');
         });
     }

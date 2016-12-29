@@ -14,7 +14,7 @@ class CreateNodesTable extends Migration
     {
         Schema::create('nodes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('accession')->index();
+            $table->string('accession')->unique();
             $table->string('name');
             $table->string('type')->index();
             $table->longText('aliases');
