@@ -11,7 +11,8 @@ _ide_helper.php
 /www/driversfinder/node_modules/
 /www/driversfinder/bootstrap/cache/
 /www/driversfinder/storage/
-/www/driversfinder/resources/data/
+/www/driversfinder/resources/data/expressions/
+/www/driversfinder/resources/data/mithril2/
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -36,3 +37,4 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+www/driversfinder/test.txt
