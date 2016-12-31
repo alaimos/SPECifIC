@@ -75,6 +75,7 @@ class ImportPathways extends Command
         $fp = fopen($this->nodesFile, 'r');
         if (!$fp) {
             $this->error("Unable to read nodes file.");
+            return false;
         }
         while (($line = fgets($fp)) !== false) {
             $line = str_replace(["\r", "\n"], "", $line);
@@ -107,6 +108,7 @@ class ImportPathways extends Command
         $fp = fopen($this->edgesFile, 'r');
         if (!$fp) {
             $this->error("Unable to read edges file.");
+            return false;
         }
         while (($line = fgets($fp)) !== false) {
             $line = str_replace(["\r", "\n"], "", $line);
@@ -144,6 +146,7 @@ class ImportPathways extends Command
         $fp = fopen($this->mapFile, 'r');
         if (!$fp) {
             $this->error("Unable to read pathways file.");
+            return false;
         }
         while (($line = fgets($fp)) !== false) {
             $line = str_replace(["\r", "\n"], "", $line);
@@ -180,16 +183,25 @@ class ImportPathways extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return mixed
      */
     public function handle()
     {
         if ($this->exportPathways()) {
             if ($this->importNodes()) {
                 if ($this->importEdges()) {
-                    $this->importPathways();
+                    if (!$this->importPathways()) {
+                        return 104;
+                    }
+                } else {
+                    return 103;
                 }
+            } else {
+                return 102;
             }
+        } else {
+            return 101;
         }
+        return 0;
     }
 }

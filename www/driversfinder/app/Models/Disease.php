@@ -4,6 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * App\Models\Disease
+ *
+ * @property int $id
+ * @property string $short_name
+ * @property string $description
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Node[] $perturbations
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Disease whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Disease whereShortName($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\Disease whereDescription($value)
+ * @mixin \Eloquent
+ */
 class Disease extends Model
 {
 

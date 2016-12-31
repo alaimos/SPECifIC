@@ -7,14 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Node
  *
- * @property int                                                                 $id
- * @property string                                                              $accession
- * @property string                                                              $name
- * @property string                                                              $type
- * @property array                                                               $aliases
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Edge[]    $ingoingEdges
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Edge[]    $outgoingEdges
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Pathway[] $pathways
+ * @property int                                                                        $id
+ * @property string                                                                     $accession
+ * @property string                                                                     $name
+ * @property string                                                                     $type
+ * @property array                                                                      $aliases
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Edge[]           $ingoingEdges
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Edge[]           $outgoingEdges
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Pathway[]        $pathways
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\AnnotationTerm[] $annotations
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Node whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Node whereAccession($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Node whereName($value)
@@ -50,7 +51,7 @@ class Node extends Model
     public $timestamps = false;
 
     /**
-     * Ingoing edges from this node
+     * References all ingoing edges from this node
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -60,7 +61,7 @@ class Node extends Model
     }
 
     /**
-     * Outgoing edges from this node
+     * References all outgoing edges from this node
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -70,13 +71,23 @@ class Node extends Model
     }
 
     /**
-     * Pathways with this edge
+     * References all pathways with this edge
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function pathways()
     {
         return $this->belongsToMany('App\Models\Pathway', 'pathway_nodes', 'node_id', 'pathway_id');
+    }
+
+    /**
+     * References the terms which annotate this node
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function annotations()
+    {
+        return $this->belongsToMany('App\Models\AnnotationTerm', 'annotations', 'node_id', 'term_id');
     }
 
 }

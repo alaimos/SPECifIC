@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ImportAll;
+use App\Console\Commands\ImportAnnotations;
 use App\Console\Commands\ImportDiseases;
 use App\Console\Commands\ImportPathways;
 use App\Console\Commands\IndexPathways;
@@ -16,9 +18,11 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        ImportAll::class,
         IndexPathways::class,
         ImportPathways::class,
         ImportDiseases::class,
+        ImportAnnotations::class,
     ];
 
     /**

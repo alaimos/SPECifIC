@@ -32,7 +32,7 @@ class IndexPathways extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return mixed
      */
     public function handle()
     {
@@ -46,5 +46,6 @@ class IndexPathways extends Command
         } else {
             $this->error("An error occurred!");
         }
+        return $return;
     }
 }

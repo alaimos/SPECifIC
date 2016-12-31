@@ -65,7 +65,7 @@ class ImportDiseases extends Command
     /**
      * Execute the console command.
      *
-     * @return void
+     * @return mixed
      */
     public function handle()
     {
@@ -77,6 +77,7 @@ class ImportDiseases extends Command
         $fp = gzopen($diseasesFile, 'r');
         if (!$fp) {
             $this->error('Unable to read diseases file');
+            return 101;
         } else {
             while (($line = fgets($fp)) !== false) {
                 $line = str_replace(["\r", "\n"], "", $line);
@@ -95,5 +96,6 @@ class ImportDiseases extends Command
             }
             $this->info("Done!");
         }
+        return 0;
     }
 }
