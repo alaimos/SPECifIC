@@ -55,7 +55,7 @@ class DispatcherJob implements ShouldQueue
         } catch (\Exception $e) {
             if ($jobData instanceof JobData) {
                 $jobData->job_status = JobData::FAILED;
-                $jobData->appendLog("Job failed! An exception occurred during execution: " . $e->getMessage());
+                $jobData->appendLog("Error!\nAn exception occurred during execution: " . $e->getMessage());
             }
             $this->fail($e);
         }

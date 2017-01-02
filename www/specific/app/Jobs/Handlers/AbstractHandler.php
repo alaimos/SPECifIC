@@ -2,7 +2,9 @@
 
 namespace App\Jobs\Handlers;
 
+use App\Exceptions\CommandException;
 use App\Exceptions\JobException;
+use App\Utils\Utils;
 use Illuminate\Queue\InteractsWithQueue;
 use App\Models\Job as JobData;
 
@@ -13,7 +15,7 @@ abstract class AbstractHandler implements HandlerInterface
     /**
      * @var \App\Models\Job
      */
-    private $jobData;
+    protected $jobData;
 
     /**
      * Create a new job instance.
@@ -52,25 +54,53 @@ abstract class AbstractHandler implements HandlerInterface
     }
 
     /**
+     * Map command exception to message
+     *
+     * @param string           $command
+     * @param CommandException $e
+     * @param array            $errorCodeMap
+     * @return boolean
+     * @throws JobException
+     */
+    protected function mapCommandException($command, CommandException $e, array $errorCodeMap = [])
+    {
+        $code = intval($e->getMessage());
+        if (isset($errorCodeMap[$code])) {
+            throw new JobException($errorCodeMap[$code]);
+        } else {
+            throw new JobException('Execution of command "' . $command . '" returned error code ' . $code . '.');
+        }
+    }
+
+    /**
      * Runs a shell command and checks for successful completion of execution
      *
      * @param string     $command
      * @param array|null $output
      * @param array      $errorCodeMap
      * @return boolean
+     * @throws JobException
      */
     protected function runCommand($command, array &$output = null, array $errorCodeMap = [])
     {
-        $returnCode = -1;
-        exec($command, $output, $returnCode);
-        if ($returnCode != 0) {
-            if (isset($errorCodeMap[$returnCode])) {
-                throw new JobException($errorCodeMap[$returnCode]);
-            } else {
-                throw new JobException('Execution of command "' . $command . '" returned error code ' . $returnCode . '.');
-            }
+        try {
+            return Utils::runCommand($command, $output);
+        } catch (CommandException $e) {
+            return $this->mapCommandException($command, $e, $errorCodeMap);
         }
-        return true;
+    }
+
+    /**
+     * Append text to the log
+     *
+     * @param string  $text
+     * @param boolean $appendNewLine
+     * @return $this
+     */
+    public function log($text, $appendNewLine = true)
+    {
+        $this->jobData->appendLog($text, $appendNewLine);
+        return $this;
     }
 
 }

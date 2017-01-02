@@ -94,7 +94,7 @@ class ImportDiseases extends Command
                     $this->importPerturbations($disease, $perturbationsFile, $nodesMap);
                 }
             }
-            $this->info("Done!");
+            $this->info(PHP_EOL . "Done!");
         }
         return 0;
     }

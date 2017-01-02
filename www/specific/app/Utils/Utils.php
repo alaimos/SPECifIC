@@ -3,7 +3,9 @@
 namespace App\Utils;
 
 
-class Utils
+use App\Exceptions\CommandException;
+
+final class Utils
 {
     /**
      * Delete a file or a directory
@@ -21,10 +23,86 @@ class Utils
         } elseif (is_dir($path)) {
             $files = array_diff(scandir($path), ['.', '..']);
             foreach ($files as $file) {
-                self::delete($path . DIRECTORY_SEPARATOR . $file);
+                static::delete($path . DIRECTORY_SEPARATOR . $file);
             }
             return rmdir($path);
         }
         return false;
+    }
+
+    /**
+     * Create a directory and set chmod
+     *
+     * @param string $directory
+     * @return void
+     */
+    public static function createDirectory($directory)
+    {
+        if (!file_exists($directory)) {
+            @mkdir($directory, 0777, true);
+            @chmod($directory, 0777);
+        }
+    }
+
+    /**
+     * Returns the path of a storage directory
+     *
+     * @param string $type
+     * @return string
+     */
+    public static function getStorageDirectory($type)
+    {
+        $path = storage_path('app/' . $type);
+        if (!file_exists($path)) {
+            static::createDirectory($path);
+        }
+        return $path;
+    }
+
+    /**
+     * Returns the path of the temporary files directory
+     *
+     * @return string
+     */
+    public static function tempDir()
+    {
+        $dirName = storage_path('tmp');
+        if (!file_exists($dirName)) {
+            static::createDirectory($dirName);
+        }
+        return $dirName;
+    }
+
+    /**
+     * Return the path of a temporary file name in the temporary files directory
+     *
+     * @param string $prefix
+     * @param string $extension
+     * @return string
+     */
+    public static function tempFile($prefix = '', $extension = '')
+    {
+        $filename = tempnam(static::tempDir(), $prefix);
+        if (!empty($extension)) {
+            $filename .= '.' . ltrim('.', $extension);
+        }
+        return $filename;
+    }
+
+    /**
+     * Runs a shell command and checks for successful completion of execution
+     *
+     * @param string     $command
+     * @param array|null $output
+     * @return boolean
+     */
+    public static function runCommand($command, array &$output = null)
+    {
+        $returnCode = -1;
+        exec($command, $output, $returnCode);
+        if ($returnCode != 0) {
+            throw new CommandException($returnCode);
+        }
+        return true;
     }
 }

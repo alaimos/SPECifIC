@@ -90,6 +90,106 @@ class Job extends Model
     }
 
     /**
+     * Get the value of a parameter for this job
+     *
+     * @param string $parameter
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function getParameter($parameter, $default = null)
+    {
+        return (isset($this->job_parameters[$parameter])) ? $this->job_parameters[$parameter] : $default;
+    }
+
+    /**
+     * Set the value of a parameter for this job
+     *
+     * @param string $parameter
+     * @param mixed  $value
+     * @return $this
+     */
+    public function setParameter($parameter, $value)
+    {
+        $tmp = $this->job_parameters;
+        $tmp[$parameter] = $value;
+        $this->job_parameters = $tmp;
+        return $this;
+    }
+
+    /**
+     * Add parameters to this job
+     *
+     * @param array $parameters
+     * @return $this
+     */
+    public function addParameters($parameters)
+    {
+        foreach ($parameters as $param => $value) {
+            $this->setParameter($param, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * Set parameters to this job
+     *
+     * @param array $parameters
+     * @return $this
+     */
+    public function setParameters($parameters)
+    {
+        $this->job_parameters = [];
+        return $this->addParameters($parameters);
+    }
+
+
+    /**
+     * Get the value of a parameter for this job
+     *
+     * @param string $key
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function getData($key, $default = null)
+    {
+        return (isset($this->job_data[$key])) ? $this->job_data[$key] : $default;
+    }
+
+    /**
+     * Set the value of a parameter for this job
+     *
+     * @param array|string $key
+     * @param mixed|null   $value
+     * @return $this
+     */
+    public function setData(array $key, $value = null)
+    {
+        if (is_array($key)) {
+            $this->job_data = [];
+            return $this->addData($key);
+        } else {
+            $tmp = $this->job_data;
+            $tmp[$key] = $value;
+            $this->job_data = $tmp;
+        }
+        return $this;
+    }
+
+    /**
+     * Add parameters to this job
+     *
+     * @param array $key
+     * @return $this
+     */
+    public function addData($key)
+    {
+        foreach ($key as $param => $value) {
+            $this->setData($param, $value);
+        }
+        return $this;
+    }
+
+    /**
      * Append text to the log
      *
      * @param string  $text
@@ -116,12 +216,22 @@ class Job extends Model
      */
     public function getJobDirectory()
     {
-        $path = storage_path('app/jobs/' . $this->getJobKey());
+        $path = Utils::getStorageDirectory('jobs') . DIRECTORY_SEPARATOR . $this->getJobKey();
         if (!file_exists($path)) {
-            mkdir($path, 0777, true);
-            chmod($path, 0777);
+            Utils::createDirectory($path);
         }
         return $path;
+    }
+
+    /**
+     * Returns the path of a file in the job storage directory
+     *
+     * @param string $filename
+     * @return string
+     */
+    public function getJobFile($filename)
+    {
+        return $this->getJobDirectory() . DIRECTORY_SEPARATOR . $filename;
     }
 
     /**
