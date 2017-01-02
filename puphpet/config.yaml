@@ -20,8 +20,8 @@ vagrantfile:
                         update_guest_tools: 0
                 machines:
                     vflm_g1nujp048gh1:
-                        id: driversfinder
-                        hostname: driversfinder.puphpet
+                        id: specific
+                        hostname: specific.puphpet
                         network:
                             private_network: 192.168.56.105
                             forwarded_port:
@@ -185,10 +185,10 @@ apache:
         - rewrite
     vhosts:
         av_yllribgaikis:
-            servername: driversfinder.app
+            servername: specific.app
             serveraliases:
-                - www.driversfinder.app
-            docroot: /var/www/driversfinder/public/
+                - www.specific.app
+            docroot: /var/www/specific/public/
             port: '80'
             setenv:
                 - 'APP_ENV dev'
@@ -204,7 +204,7 @@ apache:
             ssl_cipher: ''
             directories:
                 avd_s1c8xmurvvir:
-                    path: /var/www/driversfinder/public/
+                    path: /var/www/specific/public/
                     options:
                         - Indexes
                         - FollowSymlinks

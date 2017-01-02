@@ -7,12 +7,12 @@ _ide_helper.php
 /www/html/index.html
 /www/html/beanstalk_console/
 /logs/php_error.log
-/www/driversfinder/vendor/
-/www/driversfinder/node_modules/
-/www/driversfinder/bootstrap/cache/
-/www/driversfinder/storage/
-/www/driversfinder/resources/data/expressions/
-/www/driversfinder/resources/data/mithril2/
+/www/specific/vendor/
+/www/specific/node_modules/
+/www/specific/bootstrap/cache/
+/www/specific/storage/
+/www/specific/resources/data/expressions/
+/www/specific/resources/data/mithril2/
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -37,4 +37,4 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
-www/driversfinder/test.txt
+www/specific/test.txt

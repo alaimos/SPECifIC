@@ -39,7 +39,7 @@ class DispatcherJob implements ShouldQueue
         $jobData = null;
         try {
             $jobData = JobData::whereId($this->jobDataId)->first();
-            $class = '\App\Jobs\Handlers\\' . camel_case($jobData->job_type);
+            $class = '\App\Jobs\Handlers\\' . studly_case($jobData->job_type);
             if (!class_exists($class)) {
                 $this->fail(new JobException('Job handler (' . $class . ') not found.'));
             } else {
