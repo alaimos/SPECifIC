@@ -43,7 +43,11 @@ if (!is.null(opt$help)) {
         if (is.null(opt$maxpv)) {
             opt$maxpv <- 1
         }
-        lst <- unique(unlist(strsplit(x=readLines(opt$list), split=",", fixed=TRUE)))
+        lst <- unique(unlist(strsplit(x=readLines(opt$list, warn=FALSE), split=",", fixed=TRUE)))
+        lst <- lst[lst != ""]
+        if (length(lst) <= 0) {
+            stop("Empty input list")
+        }
         er  <- compute.enrichment(gs=lst, enrichment.data=enrichment.data, 
                                   total.annotated=total.annotated, 
                                   total.annotated.by.term=total.annotated.by.term,

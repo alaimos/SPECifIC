@@ -60,7 +60,7 @@ vagrantfile:
                         - .vagrant/
                         - .git/
                     auto: 'true'
-                owner: www-data
+                owner: vagrant
                 group: www-data
         usable_port_range:
             start: 10200
@@ -309,10 +309,26 @@ python:
     packages: {  }
     versions: {  }
 nodejs:
-    install: '0'
+    install: '1'
     settings:
         version: '6'
-    npm_packages: {  }
+    npm_packages:
+        - gulp
+        - gulp-cli
+        - gulp-ext-replace
+        - gulp-imagemin
+        - gulp-postcss
+        - gulp-sourcemaps
+        - gulp-uglify
+        - gulp-bower
+        - main-bower-files
+        - stream-browserify
+        - laravel-elixir
+        - laravel-elixir-vue-2
+        - laravel-elixir-webpack-official
+        - lodash
+        - vue
+        - vue-resource
 hhvm:
     install: '0'
     composer: '1'

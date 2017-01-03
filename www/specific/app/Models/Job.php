@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Utils\Utils;
 use Illuminate\Database\Eloquent\Model;
+use Monolog\Handler\SyslogHandler;
 
 /**
  * App\Models\Job
@@ -162,7 +163,7 @@ class Job extends Model
      * @param mixed|null   $value
      * @return $this
      */
-    public function setData(array $key, $value = null)
+    public function setData($key, $value = null)
     {
         if (is_array($key)) {
             $this->job_data = [];
@@ -202,6 +203,7 @@ class Job extends Model
         if ($appendNewLine) {
             $text .= "\n";
         }
+        echo $text;
         $this->job_log = $this->job_log . $text;
         if ($commit) {
             $this->save();

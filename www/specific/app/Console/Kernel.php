@@ -7,6 +7,7 @@ use App\Console\Commands\ImportAnnotations;
 use App\Console\Commands\ImportDiseases;
 use App\Console\Commands\ImportPathways;
 use App\Console\Commands\IndexPathways;
+use App\Console\Commands\TestJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -23,6 +24,7 @@ class Kernel extends ConsoleKernel
         ImportPathways::class,
         ImportDiseases::class,
         ImportAnnotations::class,
+        TestJob::class,
     ];
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use App\Exceptions\AnnotateException;
+use App\Exceptions\CommandException;
 use App\Exceptions\ExportSubStructuresException;
 use App\Models\Disease;
 use App\Models\Node;
@@ -94,17 +95,15 @@ final class Commons
     }
 
     /**
-     * Annotate a set of nodes
+     * Annotate a set of nodes and returns the output file name
      *
-     * @param array      $list
-     * @param string     $outputFile
-     * @param float      $maxPValue
-     * @param string     $pvAdjust
-     * @param array|null $commandOutput
-     * @return bool
+     * @param array  $list
+     * @param float  $maxPValue
+     * @param string $pvAdjust
+     * @return string
+     * @throws AnnotateException
      */
-    public static function makeAnnotation(array $list, $outputFile, $maxPValue = 0.05, $pvAdjust = "BH",
-        array &$commandOutput = null)
+    public static function makeAnnotation(array $list, $maxPValue = 0.05, $pvAdjust = "BH")
     {
         if (!count($list)) {
             throw new AnnotateException('List of nodes to annotate is empty.');
@@ -115,13 +114,28 @@ final class Commons
             }
             return $e;
         }, $list);
-        $tempFile = Utils::tempFile('list', '.txt');
-        file_put_contents($tempFile, implode("\n", $list));
+        sort($list);
+        $key = Utils::makeKey($list, $maxPValue, $pvAdjust);
+        $outputFile = Utils::getStorageDirectory('annotations') . DIRECTORY_SEPARATOR . $key . '.txt';
+        $tempFile = Utils::tempFile('list', 'txt');
+        file_put_contents($tempFile, implode("\n", $list) . PHP_EOL);
         $paramString = sprintf(self::R_ANNOTATE_PARAMETERS, escapeshellarg($tempFile), $maxPValue,
             escapeshellarg($pvAdjust), escapeshellarg($outputFile));
         $command = sprintf(self::R_EXEC, resource_path(self::R_ANNOTATE), $paramString);
-        Utils::runCommand($command, $commandOutput);
-        return unlink($tempFile);
+        $commandOutput = [];
+        try {
+            Utils::runCommand($command, $commandOutput);
+        } catch (CommandException $e) {
+            $code = intval($e->getMessage());
+            if ($code == 102) {
+                throw new AnnotateException(array_pop($commandOutput));
+            } else {
+                throw new AnnotateException('Error ' . $code . ' during annotation.');
+            }
+        } finally {
+            unlink($tempFile);
+        }
+        return $outputFile;
     }
 
     /**

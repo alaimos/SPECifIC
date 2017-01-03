@@ -82,9 +82,9 @@ final class Utils
      */
     public static function tempFile($prefix = '', $extension = '')
     {
-        $filename = tempnam(static::tempDir(), $prefix);
+        $filename = self::tempDir() . DIRECTORY_SEPARATOR . $prefix . self::makeKey($prefix . microtime(true));
         if (!empty($extension)) {
-            $filename .= '.' . ltrim('.', $extension);
+            $filename .= '.' . ltrim($extension, '.');
         }
         return $filename;
     }
@@ -104,5 +104,33 @@ final class Utils
             throw new CommandException($returnCode);
         }
         return true;
+    }
+
+    /**
+     * Generate an unique key starting from a set of objects
+     *
+     * @param mixed ...
+     * @return string
+     */
+    public static function makeKey(/*...*/)
+    {
+        $objects = array_filter(array_map(function ($e) {
+            if (is_object($e)) {
+                if (method_exists($e, 'getKey')) {
+                    return $e->getKey();
+                } else {
+                    return (string)$e;
+                }
+            } elseif (is_array($e)) {
+                return implode(',', $e);
+            } elseif (is_resource($e)) {
+                return null;
+            } else {
+                return $e;
+            }
+        }, func_get_args()), function ($e) {
+            return $e !== null;
+        });
+        return md5(implode('-', $objects));
     }
 }
