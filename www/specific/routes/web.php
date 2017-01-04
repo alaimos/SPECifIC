@@ -11,6 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'HomeController@index')->name('index');
+Route::match(['get', 'post'], '/list-nois', 'HomeController@listNodesOfInterest')->name('list-nois');
+Route::post('/submit-extraction', 'HomeController@submitExtractionJob')->name('submit-extraction');
+Route::get('/contacts', function () {
+    return view('contacts');
+});
+Route::get('/references', function () {
+    return view('references');
 });

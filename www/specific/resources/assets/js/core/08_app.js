@@ -612,10 +612,10 @@ var App = function() {
         var $date       = new Date();
         var $yearCopy   = jQuery('.js-year-copy');
 
-        if ($date.getFullYear() === 2015) {
-            $yearCopy.html('2015');
+        if ($date.getFullYear() === 2016) {
+            $yearCopy.html('2016');
         } else {
-            $yearCopy.html('2015-' + $date.getFullYear().toString().substr(2,2));
+            $yearCopy.html('2016-' + $date.getFullYear().toString().substr(2,2));
         }
     };
 
