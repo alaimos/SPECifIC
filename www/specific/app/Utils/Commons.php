@@ -117,25 +117,27 @@ final class Commons
         sort($list);
         $key = Utils::makeKey($list, $maxPValue, $pvAdjust);
         $outputFile = Utils::getStorageDirectory('annotations') . DIRECTORY_SEPARATOR . $key . '.txt';
-        $tempFile = Utils::tempFile('list', 'txt');
-        file_put_contents($tempFile, implode("\n", $list) . PHP_EOL);
-        $paramString = sprintf(self::R_ANNOTATE_PARAMETERS, escapeshellarg($tempFile), $maxPValue,
-            escapeshellarg($pvAdjust), escapeshellarg($outputFile));
-        $command = sprintf(self::R_EXEC, resource_path(self::R_ANNOTATE), $paramString);
-        $commandOutput = [];
-        try {
-            Utils::runCommand($command, $commandOutput);
-        } catch (CommandException $e) {
-            $code = intval($e->getMessage());
-            if ($code == 102) {
-                throw new AnnotateException(array_pop($commandOutput));
-            } else {
-                throw new AnnotateException('Error ' . $code . ' during annotation.');
+        if (!file_exists($outputFile)) {
+            $tempFile = Utils::tempFile('list', 'txt');
+            file_put_contents($tempFile, implode("\n", $list) . PHP_EOL);
+            $paramString = sprintf(self::R_ANNOTATE_PARAMETERS, escapeshellarg($tempFile), $maxPValue,
+                escapeshellarg($pvAdjust), escapeshellarg($outputFile));
+            $command = sprintf(self::R_EXEC, resource_path(self::R_ANNOTATE), $paramString);
+            $commandOutput = [];
+            try {
+                Utils::runCommand($command, $commandOutput);
+            } catch (CommandException $e) {
+                $code = intval($e->getMessage());
+                if ($code == 102) {
+                    throw new AnnotateException(array_pop($commandOutput));
+                } else {
+                    throw new AnnotateException('Error ' . $code . ' during annotation.');
+                }
+            } finally {
+                unlink($tempFile);
             }
-        } finally {
-            unlink($tempFile);
         }
-        return $outputFile;
+        return [$key, $outputFile];
     }
 
     /**

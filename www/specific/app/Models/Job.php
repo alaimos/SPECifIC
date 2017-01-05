@@ -203,7 +203,6 @@ class Job extends Model
         if ($appendNewLine) {
             $text .= "\n";
         }
-        echo $text;
         $this->job_log = $this->job_log . $text;
         if ($commit) {
             $this->save();

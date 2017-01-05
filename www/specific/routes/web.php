@@ -20,3 +20,10 @@ Route::get('/contacts', function () {
 Route::get('/references', function () {
     return view('references');
 });
+Route::get('/extraction/{jobKey}', 'ExtractionResultController@viewExtractionResult')->name('extraction-results');
+Route::post('/extraction/{jobKey}/structures', 'ExtractionResultController@listStructuresData')
+    ->name('extraction-structures');
+Route::get('/extraction/{jobKey}/enrich/{id}', 'ExtractionResultController@runEnrichment')
+    ->name('extraction-enrich');
+Route::get('/extraction/{extractionJobKey}/enrichment/{enrichmentJobKey}',
+    'EnrichmentResultController@viewEnrichmentResult')->name('extraction-enrichment');

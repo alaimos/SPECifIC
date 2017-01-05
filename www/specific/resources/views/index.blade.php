@@ -5,7 +5,7 @@
     <div class="bg-primary-dark">
         <!-- Search Content -->
         <section class="content content-full content-boxed overflow-hidden">
-            <div class="push-100-t push-100">
+            <div class="push-50-t push-50">
                 <h1 class="font-s48 font-w700 text-white push-10 visibility-hidden text-center" data-toggle="appear"
                     data-class="animated fadeInDown">
                     <span class="text-primary">S</span><span class="">P</span><span class="text-primary">E</span><span
@@ -18,7 +18,6 @@
                 </h2>
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3">
-                        {{--<div class="block">--}}
                         <div class="js-wizard-simple block">
                             <!-- Step Tabs -->
                             <ul class="nav nav-tabs nav-justified">
@@ -39,7 +38,7 @@
                                   method="post">
                             {!! csrf_field() !!}
                             <!-- Steps Content -->
-                                <div class="block-content tab-content" style="min-height: 230px;">
+                                <div class="block-content tab-content" style="min-height: 242px;">
                                     <!-- Step 1 -->
                                     <div class="tab-pane push-50-t push-50 active" id="submission-form-step1">
                                         <div class="form-group">
@@ -66,7 +65,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <select class="form-control" required
-                                                                id="submission-form-select-noi" name="nois" multiple>
+                                                                id="submission-form-select-noi" name="nois[]" multiple>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -74,18 +73,27 @@
                                         </div>
                                     </div>
                                     <!-- END Step 2 -->
-
                                     <!-- Step 3 -->
                                     <div class="tab-pane push-5-t push-10" id="submission-form-step3">
                                         <div class="form-group">
                                             <label class="col-md-4 control-label" for="submission-form-max-pvalue">
-                                                Max p-value
+                                                Extraction Max p-value
                                             </label>
                                             <div class="col-md-8">
-                                                <input class="js-rangeslider" type="text"
-                                                       id="submission-form-max-pvalue"
-                                                       name="max-pvalue" data-step="0.001" data-grid="true"
-                                                       data-min="0" data-max="1" value="0.01">
+                                                <input class="form-control" type="number"
+                                                       id="submission-form-max-pvalue" name="max-pvalue" step="any"
+                                                       value="0.05">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-4 control-label"
+                                                   for="submission-form-max-pvalue-annot">
+                                                Annotation Max p-value
+                                            </label>
+                                            <div class="col-md-8">
+                                                <input class="form-control" type="number"
+                                                       id="submission-form-max-pvalue-annot" name="max-pvalue-annot"
+                                                       step="any" value="0.05">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -111,7 +119,6 @@
                                     <!-- END Step 3 -->
                                 </div>
                                 <!-- END Steps Content -->
-
                                 <!-- Steps Navigation -->
                                 <div class="block-content block-content-mini block-content-full border-t">
                                     <div class="row">
@@ -133,7 +140,6 @@
                             </form>
                             <!-- END Form -->
                         </div>
-                        {{--</div>--}}
                     </div>
                 </div>
             </div>

@@ -47,7 +47,6 @@ class DispatcherJob implements ShouldQueue
                 $jobData->save();
                 /** @var AbstractHandler $handler */
                 $handler = new $class($jobData);
-                $handler->setJob($this->job);
                 $handler->handle();
                 $jobData->job_status = JobData::COMPLETED;
                 $jobData->save();

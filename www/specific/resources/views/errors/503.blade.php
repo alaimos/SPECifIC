@@ -1,47 +1,17 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Be right back.</title>
+@extends('layout.app_simple')
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-
-        <style>
-            html, body {
-                height: 100%;
-            }
-
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                color: #B0BEC5;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato', sans-serif;
-            }
-
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .title {
-                font-size: 72px;
-                margin-bottom: 40px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">Be right back.</div>
+@section('content')
+    <!-- Maintenance Content -->
+    <div class="content bg-white text-center pulldown overflow-hidden">
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div class="font-s64 text-gray push-30-t push-50">
+                    <i class="fa fa-cog fa-spin"></i>
+                </div>
+                <h1 class="h2 font-w400 push-15 animated fadeInLeftBig">Sorry, we’re down for maintenance.</h1>
+                <h2 class="h3 font-w300 text-dark-op push-50 animated fadeInRightBig">We’ll be back shortly!</h2>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+    <!-- END Maintenance Content -->
+@endsection

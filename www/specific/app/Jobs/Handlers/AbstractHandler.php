@@ -10,8 +10,6 @@ use App\Models\Job as JobData;
 
 abstract class AbstractHandler implements HandlerInterface
 {
-    use InteractsWithQueue;
-
     /**
      * @var \App\Models\Job
      */

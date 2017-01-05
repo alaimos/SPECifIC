@@ -60,6 +60,17 @@ final class Utils
     }
 
     /**
+     * Returns the path of a random file in a storage directory
+     *
+     * @param string $type
+     * @return string
+     */
+    public static function storageFile($type)
+    {
+        return self::getStorageDirectory($type) . DIRECTORY_SEPARATOR . self::makeKey(rand(), microtime(true));
+    }
+
+    /**
      * Returns the path of the temporary files directory
      *
      * @return string
@@ -82,7 +93,7 @@ final class Utils
      */
     public static function tempFile($prefix = '', $extension = '')
     {
-        $filename = self::tempDir() . DIRECTORY_SEPARATOR . $prefix . self::makeKey($prefix . microtime(true));
+        $filename = self::tempDir() . DIRECTORY_SEPARATOR . $prefix . self::makeKey($prefix, microtime(true));
         if (!empty($extension)) {
             $filename .= '.' . ltrim($extension, '.');
         }
@@ -132,5 +143,27 @@ final class Utils
             return $e !== null;
         });
         return md5(implode('-', $objects));
+    }
+
+    /**
+     * Compress and encode a big array for storing in the database
+     *
+     * @param array $array
+     * @return string
+     */
+    public static function compressArray(array $array)
+    {
+        return base64_encode(gzcompress(serialize($array), 9));
+    }
+
+    /**
+     * Decode and expand a big array from the database
+     *
+     * @param string $string
+     * @return array
+     */
+    public static function uncompressArray($string)
+    {
+        return (array)unserialize(gzuncompress(base64_decode($string)));
     }
 }

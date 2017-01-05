@@ -90,4 +90,20 @@ class Node extends Model
         return $this->belongsToMany('App\Models\AnnotationTerm', 'annotations', 'node_id', 'term_id');
     }
 
+    /**
+     * Returns the URL of this node for external references
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        if ($this->type == 'mirna') {
+            return 'http://www.mirbase.org/cgi-bin/query.pl?terms=' . $this->accession;
+        } elseif ($this->type == 'gene') {
+            return 'https://www.ncbi.nlm.nih.gov/gene/' . $this->accession;
+        } else {
+            return 'http://www.kegg.jp/dbget-bin/www_bget?' . $this->accession;
+        }
+    }
+
 }
