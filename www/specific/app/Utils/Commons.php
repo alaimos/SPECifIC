@@ -72,25 +72,39 @@ final class Commons
     /**
      * Generate an heatmap
      *
-     * @param Disease    $disease
-     * @param array      $selection
-     * @param array|null $commandOutput
+     * @param Disease $disease
+     * @param array   $selection
      * @return string
      */
-    public static function makeHeatmap(Disease $disease, array $selection, array &$commandOutput = null)
+    public static function makeHeatmap(Disease $disease, array $selection)
     {
-        $key = md5($disease->short_name . '-' . implode('-', $selection));
+        sort($selection);
+        $key = Utils::makeKey($disease->short_name, $selection);
         $heatmapFile = Utils::getStorageDirectory('heatmaps') . DIRECTORY_SEPARATOR . $key . '.png';
         if (file_exists($heatmapFile)) {
             return $heatmapFile;
         }
+        $tempFile = Utils::tempFile('list', 'txt');
+        file_put_contents($tempFile, implode("\n", $selection) . PHP_EOL);
         $diseasePath = escapeshellarg(self::getExpressionPath($disease));
         $controlPath = escapeshellarg(self::getExpressionPath($disease, true));
-        $selectionString = escapeshellarg(implode(',', $selection));
-        $paramString = sprintf(self::R_MAKE_HEATMAP, $diseasePath, $controlPath, $selectionString,
+        $selectionString = escapeshellarg($tempFile);
+        $paramString = sprintf(self::R_MAKE_HEATMAP_PARAMETERS, $diseasePath, $controlPath, $selectionString,
             escapeshellarg($heatmapFile));
         $command = sprintf(self::R_EXEC, resource_path(self::R_MAKE_HEATMAP), $paramString);
-        Utils::runCommand($command, $commandOutput);
+        $commandOutput = null;
+        try {
+            Utils::runCommand($command, $commandOutput);
+        } catch (CommandException $e) {
+            $code = intval($e->getMessage());
+            if ($code == 102) {
+                throw new AnnotateException(array_pop($commandOutput));
+            } else {
+                throw new AnnotateException('Error ' . $code . ' during heatmap generation.');
+            }
+        } finally {
+            @unlink($tempFile);
+        }
         return $heatmapFile;
     }
 

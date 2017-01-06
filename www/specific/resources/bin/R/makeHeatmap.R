@@ -15,7 +15,7 @@ script.dir <- dirname((function() {
     }
 })())
 source(paste0(script.dir, "/setup.R"))
-require.packages(c("pheatmap", "getopt"))
+require.packages(c("pheatmap", "getopt","limma"))
 source(paste0(script.dir, "/common.R"))
 
 cmd.line.valid.args <- matrix(c(
@@ -35,8 +35,14 @@ if (!is.null(opt$help)) {
     tryCatch({
         case <- read.delim(file=opt$case,    header=TRUE, sep="\t", dec=".", row.names=1, check.names=FALSE)
         cntl <- read.delim(file=opt$control, header=TRUE, sep="\t", dec=".", row.names=1, check.names=FALSE)
-        selection <- gsub("\\s+", "", unlist(strsplit(opt$selection, split=",", fixed=TRUE, perl=FALSE)))
-        make.heatmap(case, cntl, selection, opt$output)
+        lst <- unique(unlist(strsplit(x=readLines(opt$selection, warn=FALSE), split=",", fixed=TRUE)))
+        lst <- lst[lst != ""]
+        if (length(lst) <= 0) {
+            stop("Empty input list")
+        }
+        lst <- lst[1:min(100,length(lst))]
+        #selection <- gsub("\\s+", "", unlist(strsplit(opt$selection, split=",", fixed=TRUE, perl=FALSE)))
+        make.heatmap(case, cntl, lst, opt$output)
     }, error=function (e) {
         cat(e$message,"\n")
         q(status=102, save="no")

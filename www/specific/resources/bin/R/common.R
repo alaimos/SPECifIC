@@ -10,6 +10,7 @@ make.heatmap <- function (case, cntl, selection, output) {
         stop("No valid element selected for the heatmap")
     }
     mat <- mat[selection,]
+    mat <- voom(mat)$E
     pheatmap(mat, 
              legend = TRUE, 
              color = colorRampPalette(c("navy", "white", "firebrick3"))(100),

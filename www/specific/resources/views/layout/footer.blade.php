@@ -4,7 +4,7 @@
 <script>
     jQuery(function () {
         // Init page helpers (Appear + CountTo plugins)
-        App.initHelpers(['appear', 'appear-countTo', 'select2', 'rangeslider']);
+        App.initHelpers(['appear', 'appear-countTo', 'select2']);
     });
 </script>
 @stack('inline-scripts')

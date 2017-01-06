@@ -28,6 +28,9 @@ vagrantfile:
                                 vflmnfp_bpo8n4jo0jfb:
                                     host: '6999'
                                     guest: '22'
+                                wenofrg_j1309ej091je:
+                                    host: '8888'
+                                    guest: '80'
                         memory: '14336'
                         cpus: '2'
         provision:

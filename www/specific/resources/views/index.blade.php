@@ -227,10 +227,12 @@
                         var results = [];
                         $.each(data.data, function (i, v) {
                             results.push({
-                                id:        v.accession,
-                                text:      v.accession,
-                                name:      v.name,
-                                accession: v.accession
+                                id:           v.accession,
+                                text:         v.accession,
+                                name:         v.name,
+                                accession:    v.accession,
+                                pvalue:       v.pvalue.toFixed(4),
+                                perturbation: v.perturbation.toFixed(4),
                             });
                         });
                         return {
@@ -242,10 +244,18 @@
                     },
                     cache:          true
                 },
+                escapeMarkup:       function (markup) {
+                    return markup;
+                }, // let our custom formatter work
                 minimumInputLength: 1,
                 templateResult:     function (result) {
                     if (result.loading) return result.text;
-                    return (result.accession + ' - ' + result.name);
+                    return $('<div class="row">' +
+                        '<div class="col-xs-2">' + result.accession + '</div>' +
+                        '<div class="col-xs-7">' + result.name + '</div>' +
+                        '<div class="col-xs-2">' + result.pvalue + '</div>' +
+                        '</div>');
+                    //return (result.accession + ' - ' + result.name + ' - p-value: ' + result.pvalue);
                 },
                 templateSelection:  function (selection) {
                     return selection.accession || selection.text;

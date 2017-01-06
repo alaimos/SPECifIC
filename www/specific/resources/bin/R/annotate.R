@@ -21,7 +21,7 @@ load(paste0(script.dir, "/../../data/enrichment_data.RData"))
 
 cmd.line.valid.args <- matrix(c(
     "list",               "l",  1,  "character",  "A file containing a list of genes in a subpathway",
-    "maxpv",              "p",  2,  "character",  "Maximal p-value threshold",
+    "maxpv",              "p",  2,  "double",     "Maximal p-value threshold",
     "pvadjust",           "a",  2,  "character",  "A pvalue adjustment method",
     "output",             "o",  1,  "character",  "Output",
     "help",               "h",  0,  "logical",    "This help"
@@ -55,7 +55,7 @@ if (!is.null(opt$help)) {
                                   p.adjust.method=opt$pvadjust)
         result <- Reduce(rbind, er)
         result <- result[result$p.value.adjusted <= opt$maxpv,]
-        write.table(result, file=opt$output, append=FALSE, quote=TRUE, sep="\t", row.names=FALSE, 
+        write.table(result, file=opt$output, append=FALSE, quote=TRUE, sep="\t", row.names=FALSE,
                     col.names=TRUE)
     }, error=function (e) {
         cat(e$message,"\n")

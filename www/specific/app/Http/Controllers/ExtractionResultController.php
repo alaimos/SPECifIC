@@ -132,25 +132,25 @@ class ExtractionResultController extends Controller
         $subStructuresFile = $jobData->getData('subStructures');
         $subStructures = $this->readStructuresList($subStructuresFile);
         return Datatables::usingCollection($subStructures)
-            ->editColumn('root', function ($data) {
-                return $this->parseNode(explode(';', $data['root']));
-            })
-            ->editColumn('nodes', function ($data) {
-                return number_format($data['nodes'], 0);
-            })
-            ->editColumn('accumulator', function ($data) {
-                return number_format($data['accumulator'], 4);
-            })
-            ->editColumn('pvalue', function ($data) {
-                return number_format($data['pvalue'], 4);
-            })
-            ->addColumn('actions', function ($data) use ($jobData) {
-                return view('analysis.extraction.substructures_actions', [
-                    'struct'  => $data,
-                    'jobData' => $jobData
-                ])->render();
-            })
-            ->setRowId('{{$id}}')->make(true);
+                         ->editColumn('root', function ($data) {
+                             return $this->parseNode(explode(';', $data['root']));
+                         })
+                         ->editColumn('nodes', function ($data) {
+                             return number_format($data['nodes'], 0);
+                         })
+                         ->editColumn('accumulator', function ($data) {
+                             return number_format($data['accumulator'], 4);
+                         })
+                         ->editColumn('pvalue', function ($data) {
+                             return number_format($data['pvalue'], 4);
+                         })
+                         ->addColumn('actions', function ($data) use ($jobData) {
+                             return view('analysis.extraction.substructures_actions', [
+                                 'struct'  => $data,
+                                 'jobData' => $jobData
+                             ])->render();
+                         })
+                         ->setRowId('{{$id}}')->make(true);
     }
 
     /**
