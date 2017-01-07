@@ -27,7 +27,7 @@ Route::get('/extraction/{jobKey}/enrich/{id}', 'ExtractionResultController@runEn
      ->name('extraction-enrich');
 Route::get('/extraction/{extractionJobKey}/enrichment/{enrichmentJobKey}',
     'EnrichmentResultController@viewEnrichmentResult')->name('extraction-enrichment');
-Route::any('/enrichment/{jobKey}/terms', 'EnrichmentResultController@listTerms')->name('enrichment-terms');
-Route::get('/enrichment/{jobKey}/view', 'EnrichmentResultController@viewSubStructure')
+Route::post('/enrichment/{jobKey}/terms', 'EnrichmentResultController@listTerms')->name('enrichment-terms');
+Route::post('/enrichment/{jobKey}/view', 'EnrichmentResultController@viewSubStructure')
      ->name('enrichment-view');
 Route::get('/enrichment/{jobKey}/heatmap', 'EnrichmentResultController@heatmap')->name('enrichment-heatmap');

@@ -76,7 +76,7 @@ class EnrichmentResultController extends Controller
         if (!$fp) {
             abort(500, 'Unable to read enrichment results');
         }
-        $i = 0;
+        //$i = 0;
         while (!feof($fp)) {
             $fields = fgetcsv($fp, 0, "\t");
             if (count($fields) != 11 || $fields[0] == 'term.id') {
@@ -90,12 +90,12 @@ class EnrichmentResultController extends Controller
                 'variance'       => doubleval($fields[4]),
                 'pvalue'         => doubleval($fields[5]),
                 'adjustedPValue' => doubleval($fields[6]),
-                'source'         => $fields[10],
+                'source'         => $this->getTermSource($fields[10]),
             ];
-            $i++;
+            /*$i++;
             if ($i == 20) {
                 break;
-            }
+            }*/
         }
         @fclose($fp);
         return collect($result);
@@ -136,6 +136,8 @@ class EnrichmentResultController extends Controller
         return view('analysis.enrichment.view', [
             'enrichmentJob' => $enrichmentJob,
             'backUrl'       => $backUrl,
+            'jobData'       => $enrichmentJob,
+            'sources'       => AnnotationSource::pluck('name', 'id')
         ]);
     }
 
@@ -165,45 +167,66 @@ class EnrichmentResultController extends Controller
                          ->editColumn('adjustedPValue', function ($data) {
                              return number_format($data['adjustedPValue'], 4);
                          })
-                         ->editColumn('source', function ($data) {
-                             return $this->getTermSource($data['source']);
-                         })
                          ->setRowData([
                              'nodes' => function ($data) use ($allNodes) {
                                  return $this->getNodesByTerm($data['id'], $allNodes)->implode(',');
                              },
-                         ])
-                         ->setRowId('{{$id}}')->make(true);
+                         ])->make(true);
     }
 
     /**
+     * Returns list of nodes and edges for rendering of the graph
+     *
      * @param string $jobKey
      * @return \Illuminate\Http\JsonResponse
      */
     public function viewSubStructure($jobKey)
     {
         $enrichmentJob = $this->jobByKey($jobKey);
+        $subStructureViewFile = $enrichmentJob->getJobFile('view.gz-array');
+        /*if (file_exists($subStructureViewFile)) {
+            return response()->json(Utils::uncompressArray(file_get_contents($subStructureViewFile)));
+        }*/
         $subStructure = $this->getStructureDetails($enrichmentJob);
         $nodesMap = [];
-        $nodes = array_filter(array_map(function ($accession) use (&$nodesMap) {
+        $elements = array_filter(array_map(function ($accession) use (&$nodesMap) {
             $node = Node::whereAccession($accession)->first();
             if ($node === null) {
                 return null;
             }
             $nodesMap[$accession] = $node->id;
-            return $node->toArray();
+            return [
+                'group' => 'nodes',
+                'data'  => [
+                    'id'   => $node->accession,
+                    'name' => $node->name,
+                    'type' => $node->type,
+                    'url'  => $node->getUrl(),
+                ],
+            ];
         }, $subStructure['nodes']));
-        $edges = array_filter(array_map(function ($edge) use ($nodesMap) {
-            $edge = Edge::whereId(Edge::computeId($nodesMap[$edge[0]], $nodesMap[$edge[1]]))->first();
-            if ($edge === null) {
-                return null;
+        foreach ($subStructure['edges'] as $edge) {
+            $edgeObject = Edge::whereId(Edge::computeId($nodesMap[$edge[0]], $nodesMap[$edge[1]]))->first();
+            if ($edge !== null) {
+                $elements[] = [
+                    'group' => 'edges',
+                    'data'  => [
+                        'id'     => $edgeObject->id,
+                        'source' => $edge[0],
+                        'target' => $edge[1],
+                        'type'   => implode(',', array_unique(array_map(function ($t) {
+                            return $t[1];
+                        }, $edgeObject->types))),
+                    ]
+                ];
             }
-            return $edge->toArray();
-        }, $subStructure['edges']));
-        return response()->json([
-            'nodes' => $nodes,
-            'edges' => $edges,
-        ]);
+        }
+        $data = [
+            'elements' => $elements,
+            'root'     => $subStructure['root'][0],
+        ];
+        file_put_contents($subStructureViewFile, Utils::compressArray($data));
+        return response()->json($data);
     }
 
     /**

@@ -5,7 +5,7 @@
     <div class="bg-primary-dark">
         <section class="content content-full content-boxed">
             <!-- Section Content -->
-            <div class="push-100-t push-50 text-center">
+            <div class="push-50-t push-50 text-center">
                 <h1 class="h2 text-white push-10">
                     Pathway Substructures
                 </h1>
@@ -23,7 +23,7 @@
             <div class="content-grid">
                 <div class="row">
                     <div class="col-xs-6 col-sm-3 col-sm-offset-3">
-                        <a class="block block-bordered block-rounded block-link-hover3" href="javascript:void(0)">
+                        <a class="block block-bordered block-rounded block-link-hover3" href="#nois-container">
                             <div class="block-content block-content-full border-b text-center">
                                 <div class="item">
                                     <i class="fa fa-cubes text-city"></i>
@@ -36,7 +36,7 @@
                         </a>
                     </div>
                     <div class="col-xs-6 col-sm-3">
-                        <a class="block block-bordered block-rounded block-link-hover3" href="javascript:void(0)">
+                        <a class="block block-bordered block-rounded block-link-hover3" href="#structures-container">
                             <div class="block-content block-content-full border-b text-center">
                                 <div class="item">
                                     <i class="fa fa-codepen text-city"></i>
@@ -54,7 +54,7 @@
         </section>
     </div>
     <div>
-        <section class="content content-boxed overflow-hidden">
+        <section class="content content-boxed overflow-hidden" id="nois-container">
             <!-- Section Content -->
             <div class="content-grid">
                 <div class="row">
@@ -109,7 +109,7 @@
         </section>
     </div>
     <div>
-        <section class="content content-boxed overflow-hidden">
+        <section class="content content-boxed overflow-hidden" id="structures-container">
             <!-- Section Content -->
             <div class="content-grid">
                 <div class="row">

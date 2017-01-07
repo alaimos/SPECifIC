@@ -396,6 +396,7 @@ var App = function() {
                                     .addClass($iconFullscreen);
                             }
                         }
+                        $elBlock.trigger('toggleFullscreen');
                         break;
                     case 'fullscreen_on':
                         $elBlock.addClass('block-opt-fullscreen');
