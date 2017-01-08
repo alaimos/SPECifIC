@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\DispatcherJob;
+use App\Models\Disease;
 use App\Models\Job;
 use App\Models\Node;
 use App\Utils\Utils;
@@ -92,17 +93,20 @@ class ExtractionResultController extends Controller
         if ($jobData->job_status == Job::QUEUED) {
             return view('analysis.extraction.job_queued', [
                 'jobData' => $jobData,
+                'disease' => Disease::whereShortName($jobData->getParameter('disease'))->first()->description,
                 'ahead'   => Job::whereJobStatus(Job::QUEUED)->where('created_at', '<', $jobData->created_at)->count(),
                 'nois'    => $NoIs,
             ]);
         } elseif ($jobData->job_status == Job::PROCESSING) {
             return view('analysis.extraction.job_processing', [
                 'jobData' => $jobData,
+                'disease' => Disease::whereShortName($jobData->getParameter('disease'))->first()->description,
                 'nois'    => $NoIs,
             ]);
         } elseif ($jobData->job_status == Job::FAILED) {
             return view('analysis.extraction.job_failed', [
                 'jobData' => $jobData,
+                'disease' => Disease::whereShortName($jobData->getParameter('disease'))->first()->description,
                 'nois'    => $NoIs,
             ]);
         } else {
@@ -110,6 +114,7 @@ class ExtractionResultController extends Controller
             $numOfStructures = intval(exec('wc -l ' . escapeshellarg($subStructuresFile)));
             return view('analysis.extraction.job_view', [
                 'jobData'       => $jobData,
+                'disease'       => Disease::whereShortName($jobData->getParameter('disease'))->first()->description,
                 'numStructures' => number_format($numOfStructures, 0),
                 'nois'          => $NoIs,
             ]);
@@ -151,6 +156,22 @@ class ExtractionResultController extends Controller
                              ])->render();
                          })
                          ->setRowId('{{$id}}')->make(true);
+    }
+
+    /**
+     * Download structures
+     *
+     * @param string $jobKey
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function download($jobKey)
+    {
+        $jobData = Job::whereJobKey($jobKey)->first();
+        if ($jobData === null || !$jobData->exists) {
+            abort(404);
+        }
+        $subStructuresFile = $jobData->getData('subStructures');
+        return response()->download($subStructuresFile, 'substructures.txt');
     }
 
     /**

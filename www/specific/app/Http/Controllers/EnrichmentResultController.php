@@ -64,6 +64,21 @@ class EnrichmentResultController extends Controller
     }
 
     /**
+     * Get the identifier of a node by using its accession number
+     *
+     * @param string $accession
+     * @param array  $nodesMap
+     * @return int
+     */
+    protected function getNodeId($accession, array &$nodesMap)
+    {
+        if (isset($nodesMap[$accession])) {
+            return $nodesMap[$accession];
+        }
+        return ($nodesMap[$accession] = Node::whereAccession($accession)->first()->id);
+    }
+
+    /**
      * Reads the result of the enrichment procedure
      *
      * @param string $resultFile
@@ -76,7 +91,6 @@ class EnrichmentResultController extends Controller
         if (!$fp) {
             abort(500, 'Unable to read enrichment results');
         }
-        //$i = 0;
         while (!feof($fp)) {
             $fields = fgetcsv($fp, 0, "\t");
             if (count($fields) != 11 || $fields[0] == 'term.id') {
@@ -92,10 +106,6 @@ class EnrichmentResultController extends Controller
                 'adjustedPValue' => doubleval($fields[6]),
                 'source'         => $this->getTermSource($fields[10]),
             ];
-            /*$i++;
-            if ($i == 20) {
-                break;
-            }*/
         }
         @fclose($fp);
         return collect($result);
@@ -128,6 +138,13 @@ class EnrichmentResultController extends Controller
         return $subStructure;
     }
 
+    /**
+     * Show the main page with the results of an enrichment analysis
+     *
+     * @param string $extractionJobKey
+     * @param string $enrichmentJobKey
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function viewEnrichmentResult($extractionJobKey, $enrichmentJobKey)
     {
         $extractionJob = $this->jobByKey($extractionJobKey);
@@ -140,7 +157,6 @@ class EnrichmentResultController extends Controller
             'sources'       => AnnotationSource::pluck('name', 'id')
         ]);
     }
-
 
     /**
      * List terms for an enrichment job
@@ -206,7 +222,8 @@ class EnrichmentResultController extends Controller
             ];
         }, $subStructure['nodes']));
         foreach ($subStructure['edges'] as $edge) {
-            $edgeObject = Edge::whereId(Edge::computeId($nodesMap[$edge[0]], $nodesMap[$edge[1]]))->first();
+            $edgeObject = Edge::whereId(Edge::computeId($this->getNodeId($edge[0], $nodesMap),
+                $this->getNodeId($edge[1], $nodesMap)))->first();
             if ($edge !== null) {
                 $elements[] = [
                     'group' => 'edges',
@@ -242,5 +259,17 @@ class EnrichmentResultController extends Controller
         $disease = Disease::whereShortName($enrichmentJob->getParameter('disease'))->first();
         $heatmapFile = Commons::makeHeatmap($disease, $subStructure['nodes']);
         return response()->file($heatmapFile);
+    }
+
+    /**
+     * Downloads results of an enrichment job
+     *
+     * @param string $jobKey
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function download($jobKey)
+    {
+        $enrichmentJob = $this->jobByKey($jobKey);
+        return response()->download($enrichmentJob->getData('annotationFile'), 'enrichment.txt');
     }
 }

@@ -124,7 +124,17 @@
     <!-- END Main Container -->
 
     <!-- Footer -->
-    <footer id="page-footer" class="bg-white">
+    <footer id="page-footer" class="content-mini content-mini-full font-s12 bg-gray-lighter clearfix">
+        <div class="pull-right">
+            Template: <a class="font-w600" href="http://goo.gl/6LF10W" target="_blank">OneUI 3.0</a> by
+            <a class="font-w600" href="http://goo.gl/vNS3I" target="_blank">pixelcave</a>
+        </div>
+        <div class="pull-left">
+            &copy; <span class="js-year-copy"></span> -
+            Developed by: <span class="font-w600">S. Alaimo, Ph.D.</span>
+        </div>
+    </footer>
+    {{--<footer id="page-footer" class="bg-white">
         <div class="content content-boxed">
         <!-- Footer Navigation
             <div class="row push-30-t items-push-2x">
@@ -195,7 +205,7 @@
             </div>
             <!-- END Copyright Info -->
         </div>
-    </footer>
+    </footer>--}}
     <!-- END Footer -->
 </div>
 <!-- END Page Container -->

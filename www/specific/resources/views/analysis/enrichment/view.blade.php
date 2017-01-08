@@ -14,6 +14,19 @@
         </section>
     </div>
     <!-- END Hero Content -->
+    <div class="bg-white">
+        <section class="content-mini content-mini-full content-boxed">
+            <div class="row">
+                <div class="col-sm-12 clearfix">
+                    <div class="pull-right">
+                        <a href="{{ $backUrl }}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left"></i> Go Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
     <div>
         <section class="content content-boxed overflow-hidden">
             <!-- Section Content -->
@@ -103,15 +116,73 @@
             <!-- END Section Content -->
         </section>
     </div>
+    <div>
+        <section class="content content-boxed overflow-hidden">
+            <!-- Section Content -->
+            <div class="content-grid">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="block block-themed block-rounded block-bordered">
+                            <div class="block-header bg-primary-dark">
+                                <ul class="block-options">
+                                    <li>
+                                        <button type="button" data-toggle="block-option"
+                                                data-action="fullscreen_toggle"></button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-toggle="block-option"
+                                                data-action="content_toggle"></button>
+                                    </li>
+                                </ul>
+                                <h3 class="block-title">Download Results</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="row push-30 push-10-t">
+                                    <div class="col-sm-6 text-center">
+                                        <a href="Javascript: void(0);" class="btn btn-success btn-download-network">
+                                            <i class="fa fa-download"></i> Download Network
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-6 text-center">
+                                        <a href="{{ route('enrichment-download', ['jobKey' => $jobData->job_key]) }}"
+                                           class="btn btn-success">
+                                            <i class="fa fa-download"></i> Download Enrichment Terms
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END Section Content -->
+        </section>
+    </div>
+    <div class="bg-white">
+        <section class="content-mini content-mini-full content-boxed">
+            <div class="row">
+                <div class="col-sm-12 clearfix">
+                    <div class="pull-right">
+                        <a href="{{ $backUrl }}" class="btn btn-primary">
+                            <i class="fa fa-arrow-left"></i> Go Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 @endsection
 @push('inline-scripts')
 <script>
-    var $cy = $('#cy'), cytoObject, $cytoBlock = $('.block-cytograph');
     $(function () {
+        var $cy = $('#cy'),
+            cytoObject,
+            $cytoBlock = $('.block-cytograph'),
+            $table = $('.js-dataTable-terms');
         var fullscreen = false;
         $cytoBlock.on('toggleFullscreen', function () {
             if (!fullscreen) {
-                var border = Math.ceil(($cytoBlock.find('.block-content').outerHeight() - $cytoBlock.find('#cy').height())/2);
+                var border = Math.ceil(($cytoBlock.find('.block-content').outerHeight() - $cytoBlock.find('#cy').height()) / 2);
                 $cytoBlock.find('#cy').height($cytoBlock.innerHeight() - $cytoBlock.find('.block-header').outerHeight() - border);
             } else {
                 $cytoBlock.find('#cy').height(300);
@@ -181,6 +252,14 @@
                             }
                         },
                         {
+                            selector: "node.highlighted",
+                            style:    {
+                                'border-color': 'red',
+                                'border-style': 'solid',
+                                'border-width': 4,
+                            }
+                        },
+                        {
                             selector: 'edge',
                             style:    {
                                 'curve-style':        'bezier',
@@ -193,7 +272,7 @@
                         {
                             selector: 'edge[type*="MISSING_INTERACTION"]',
                             style:    {
-                                'line-style':         'dotted'
+                                'line-style': 'dotted'
                             }
                         },
                         {
@@ -223,12 +302,12 @@
                             }
                         }
                     ],
-                    layout: {
+                    layout:    {
                         name:     'breadthfirst',
                         fit:      false,
                         directed: true
                     },
-                    ready:  function (e) {
+                    ready:     function (e) {
                         e.cy.panzoom({});
                         e.cy.elements('node').qtip({
                             content: function () {
@@ -264,7 +343,7 @@
                 });
             }
         });
-        $('.js-dataTable-terms').dataTable({
+        $table.dataTable({
             processing:   true,
             serverSide:   true,
             ajax:         {
@@ -313,6 +392,25 @@
                     });
                 });
             }
+        });
+        $table.on('draw.dt', function () {
+            $table.find('tbody').find('tr > td:first-child').each(function () {
+                var $this = $(this), content = $this.html();
+                $this.html('<a href="#cy" class="link-select-nodes">' + content + '</a>');
+            });
+        });
+        $table.on('click', '.link-select-nodes', function () {
+            var $this = $(this), $tr = $this.closest('tr'), nodes = $tr.data('nodes').split(',');
+            cytoObject.$('.highlighted').removeClass('highlighted');
+            var selectorArray = nodes.map(function (e) {
+                return "node[id='" + e + "']";
+            }), selector = selectorArray.join(',');
+            if (selector) {
+                cytoObject.$(selector).addClass('highlighted');
+            }
+        });
+        $('.btn-download-network').click(function () {
+            download(cytoObject.graphml(), 'graph.graphml', 'application/xml');
         });
     });
 </script>

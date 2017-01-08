@@ -13,6 +13,31 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
 
+    /**
+     * Parse a list of nodes
+     *
+     * @param array|string $node
+     * @return string
+     */
+    protected function parseNode($node)
+    {
+        static $nodeMap = [];
+        if (is_array($node)) {
+            $tmp = [];
+            foreach ($node as $n) {
+                $tmp[] = $this->parseNode($n);
+            }
+            return implode(', ', array_filter($tmp));
+        } else {
+            if (isset($nodeMap[$node])) {
+                return $nodeMap[$node];
+            }
+            if (($n = Node::whereAccession($node)->first()) != null) {
+                return ($nodeMap[$node] = view('analysis.extraction.node_view', ['node' => $n])->render());
+            }
+            return '';
+        }
+    }
 
     /**
      * Shows the index page
@@ -27,6 +52,28 @@ class HomeController extends Controller
                 return [$e->accession => $e->accession . ' - ' . $e->name];
             })
         ]);
+    }
+
+    public function history()
+    {
+        return view('history', [
+            'jobs'       => Job::whereJobType('extract_sub_structures')->orderBy('created_at', 'desc')->limit(100)
+                               ->get(),
+            'getDisease' => function (Job $job) {
+                return Disease::whereShortName($job->getParameter('disease'))->first()->description;
+            },
+            'getNois'    => function (Job $job) {
+                return $this->parseNode($job->getParameter('nodesOfInterest', []));
+            }
+        ]);
+    }
+
+    public function submitHistory(Request $request)
+    {
+        $this->validate($request, [
+            'jobIdentifier' => 'required|alpha_num|max:32|exists:jobs,job_key'
+        ]);
+        return redirect()->route('extraction-results', ['jobKey' => $request->get('jobIdentifier')]);
     }
 
     /**
@@ -55,8 +102,8 @@ class HomeController extends Controller
         /** @var Builder $query */
         $query = Node::where(function (Builder $query) use ($q) {
             $query->where('nodes.accession', 'like', '%' . $q . '%')
-                ->orWhere('nodes.name', 'like', '%' . $q . '%')
-                ->orWhere('nodes.aliases', 'like', '%' . $q . '%');
+                  ->orWhere('nodes.name', 'like', '%' . $q . '%')
+                  ->orWhere('nodes.aliases', 'like', '%' . $q . '%');
         });
         $query->join($diseaseTable, 'nodes.id', '=', $diseaseTable . '.node_id');
         $query->where($diseaseForeign, '=', $disease->id);

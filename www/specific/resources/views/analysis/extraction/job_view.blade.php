@@ -9,9 +9,6 @@
                 <h1 class="h2 text-white push-10">
                     Pathway Substructures
                 </h1>
-                <h2 class="h5 text-white-op">
-                    From this page you can view all pathway substructures found by the analysis.
-                </h2>
             </div>
             <!-- END Section Content -->
         </section>
@@ -47,6 +44,69 @@
                                             class="badge badge-default pull-right">{{ $numStructures }}</span> Sub-Structures</span>
                             </div>
                         </a>
+                    </div>
+                </div>
+            </div>
+            <!-- END Section Content -->
+        </section>
+    </div>
+    <div>
+        <section class="content content-boxed overflow-hidden" id="disease-container">
+            <!-- Section Content -->
+            <div class="content-grid">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="block block-themed block-rounded">
+                            <div class="block-header bg-primary-dark">
+                                <ul class="block-options">
+                                    <li>
+                                        <button type="button" data-toggle="block-option"
+                                                data-action="fullscreen_toggle"></button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-toggle="block-option"
+                                                data-action="content_toggle"></button>
+                                    </li>
+                                </ul>
+                                <h3 class="block-title">Analysis Description</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-6">
+                                        <dl class="dl-horizontal">
+                                            <dt>Id</dt>
+                                            <dd>
+                                                <a class="link-effect" href="Javascript: void(0);" data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="Save this identifier if you want to review the results at a later time.">
+                                                    {{ $jobData->job_key }}
+                                                </a>
+                                            </dd>
+                                            <dt>Disease</dt>
+                                            <dd>{{ $disease }}</dd>
+                                            <dt>Extraction p-value</dt>
+                                            <dd>{{ $jobData->getParameter('extractionMaxPValue', 0.05) }}</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6">
+                                        <dl class="dl-horizontal">
+                                            <dt>Enrichment p-value</dt>
+                                            <dd>{{ $jobData->getParameter('annotationMaxPValue', 0.05) }}</dd>
+                                            <dt>Min number of nodes</dt>
+                                            <dd>{{ $jobData->getParameter('minNumberOfNodes', 5) }}</dd>
+                                            <dt>Backward visit</dt>
+                                            <dd>
+                                                @if ($jobData->getParameter('backward', false))
+                                                    <i class="fa fa-check"></i>
+                                                @else
+                                                    <i class="fa fa-times"></i>
+                                                @endif
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,7 +189,8 @@
                                 <h3 class="block-title">Sub-Structures</h3>
                             </div>
                             <div class="block-content">
-                                <table class="table table-bordered table-striped js-dataTable-structures" style="width: 100%">
+                                <table class="table table-bordered table-striped js-dataTable-structures"
+                                       style="width: 100%">
                                     <thead>
                                     <tr>
                                         <th>Start Node</th>
@@ -153,6 +214,43 @@
                                     </tr>
                                     </tfoot>
                                 </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END Section Content -->
+        </section>
+    </div>
+    <div>
+        <section class="content content-boxed overflow-hidden">
+            <!-- Section Content -->
+            <div class="content-grid">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="block block-themed block-rounded block-bordered">
+                            <div class="block-header bg-primary-dark">
+                                <ul class="block-options">
+                                    <li>
+                                        <button type="button" data-toggle="block-option"
+                                                data-action="fullscreen_toggle"></button>
+                                    </li>
+                                    <li>
+                                        <button type="button" data-toggle="block-option"
+                                                data-action="content_toggle"></button>
+                                    </li>
+                                </ul>
+                                <h3 class="block-title">Download Results</h3>
+                            </div>
+                            <div class="block-content">
+                                <div class="row push-30 push-10-t">
+                                    <div class="col-sm-12 text-center">
+                                        <a href="{{ route('download-structures', ['jobKey' => $jobData->job_key]) }}"
+                                           class="btn btn-success">
+                                            <i class="fa fa-download"></i> Download Extracted Sub-structures
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -227,6 +325,7 @@
             var id = $(this).data('id');
             $('.js-dataTable-structures').find('tfoot').find('th > input').first().val(id).change();
         });
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 @endpush

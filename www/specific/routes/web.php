@@ -12,6 +12,8 @@
 */
 
 Route::get('/', 'HomeController@index')->name('index');
+Route::get('/history', 'HomeController@history')->name('history');
+Route::post('/history', 'HomeController@submitHistory')->name('submit-history');
 Route::match(['get', 'post'], '/list-nois', 'HomeController@listNodesOfInterest')->name('list-nois');
 Route::post('/submit-extraction', 'HomeController@submitExtractionJob')->name('submit-extraction');
 Route::get('/contacts', function () {
@@ -23,6 +25,7 @@ Route::get('/references', function () {
 Route::get('/extraction/{jobKey}', 'ExtractionResultController@viewExtractionResult')->name('extraction-results');
 Route::post('/extraction/{jobKey}/structures', 'ExtractionResultController@listStructuresData')
      ->name('extraction-structures');
+Route::get('/extraction/{jobKey}/download', 'ExtractionResultController@download')->name('download-structures');
 Route::get('/extraction/{jobKey}/enrich/{id}', 'ExtractionResultController@runEnrichment')
      ->name('extraction-enrich');
 Route::get('/extraction/{extractionJobKey}/enrichment/{enrichmentJobKey}',
@@ -31,3 +34,4 @@ Route::post('/enrichment/{jobKey}/terms', 'EnrichmentResultController@listTerms'
 Route::post('/enrichment/{jobKey}/view', 'EnrichmentResultController@viewSubStructure')
      ->name('enrichment-view');
 Route::get('/enrichment/{jobKey}/heatmap', 'EnrichmentResultController@heatmap')->name('enrichment-heatmap');
+Route::get('/enrichment/{jobKey}/download', 'EnrichmentResultController@download')->name('enrichment-download');
