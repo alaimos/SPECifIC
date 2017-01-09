@@ -166,4 +166,21 @@ final class Utils
     {
         return (array)unserialize(gzuncompress(base64_decode($string)));
     }
+
+    /**
+     * Format a float number using scientific notation if needed
+     *
+     * @param float $number
+     * @param int   $decimals
+     * @param bool  $scientific
+     * @return string
+     */
+    public static function formatDouble($number, $decimals = 4, $scientific = true)
+    {
+        if ($scientific && $number != 0 && abs($number) < pow(10, -$decimals)) {
+            return sprintf('%.4e', $number);
+        } else {
+            return number_format($number, $decimals);
+        }
+    }
 }

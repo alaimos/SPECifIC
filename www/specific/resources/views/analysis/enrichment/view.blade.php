@@ -358,6 +358,7 @@
                 {data: 'adjustedPValue', name: 'adjustedPValue'},
                 {data: 'source', name: 'source'},
             ],
+            order: [[4, 'asc']],
             columnDefs:   [
                 {className: 'text-right', targets: 2},
                 {className: 'text-right', targets: 3},

@@ -283,6 +283,7 @@
                 {data: 'pvalue', name: 'pvalue'},
                 {data: 'actions', name: 'actions', orderable: false, searchable: false},
             ],
+            order: [[4, 'asc']],
             columnDefs:   [
                 {responsivePriority: 1, targets: 0},
                 {responsivePriority: 1, targets: 1},

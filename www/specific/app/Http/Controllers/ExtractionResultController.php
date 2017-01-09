@@ -147,7 +147,7 @@ class ExtractionResultController extends Controller
                              return number_format($data['accumulator'], 4);
                          })
                          ->editColumn('pvalue', function ($data) {
-                             return number_format($data['pvalue'], 4);
+                             return Utils::formatDouble($data['pvalue']);
                          })
                          ->addColumn('actions', function ($data) use ($jobData) {
                              return view('analysis.extraction.substructures_actions', [

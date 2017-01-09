@@ -178,10 +178,10 @@ class EnrichmentResultController extends Controller
                              return number_format($data['variance'], 4);
                          })
                          ->editColumn('pvalue', function ($data) {
-                             return number_format($data['pvalue'], 4);
+                             return Utils::formatDouble($data['pvalue']);
                          })
                          ->editColumn('adjustedPValue', function ($data) {
-                             return number_format($data['adjustedPValue'], 4);
+                             return Utils::formatDouble($data['adjustedPValue']);
                          })
                          ->setRowData([
                              'nodes' => function ($data) use ($allNodes) {
@@ -200,9 +200,9 @@ class EnrichmentResultController extends Controller
     {
         $enrichmentJob = $this->jobByKey($jobKey);
         $subStructureViewFile = $enrichmentJob->getJobFile('view.gz-array');
-        /*if (file_exists($subStructureViewFile)) {
+        if (file_exists($subStructureViewFile)) {
             return response()->json(Utils::uncompressArray(file_get_contents($subStructureViewFile)));
-        }*/
+        }
         $subStructure = $this->getStructureDetails($enrichmentJob);
         $nodesMap = [];
         $elements = array_filter(array_map(function ($accession) use (&$nodesMap) {
