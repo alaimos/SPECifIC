@@ -57,14 +57,14 @@
                             <a href="{{ url('/history') }}"><i class="si si-clock"></i><span
                                         class="sidebar-mini-hide">Results History</span></a>
                         </li>
-                        <li>
+                        {{--<li>
                             <a href="{{ url('/api') }}"><i class="si si-energy"></i><span
                                         class="sidebar-mini-hide">API</span></a>
                         </li>
                         <li>
                             <a href="{{ url('/help') }}"><i class="si si-question"></i><span
                                         class="sidebar-mini-hide">Help</span></a>
-                        </li>
+                        </li>--}}
                         <li>
                             <a href="{{ url('/references') }}"><i class="si si-book-open"></i><span
                                         class="sidebar-mini-hide">References</span></a>
@@ -134,78 +134,6 @@
             Developed by: <span class="font-w600">S. Alaimo, Ph.D.</span>
         </div>
     </footer>
-    {{--<footer id="page-footer" class="bg-white">
-        <div class="content content-boxed">
-        <!-- Footer Navigation
-            <div class="row push-30-t items-push-2x">
-                <div class="col-sm-4">
-                    <h3 class="h5 font-w600 text-uppercase push-20">Company</h3>
-                    <ul class="list list-simple-mini font-s13">
-                        <li>
-                            <a class="font-w600" href="frontend_home.html">Home</a>
-                        </li>
-                        <li>
-                            <a class="font-w600" href="frontend_features.html">Features</a>
-                        </li>
-                        <li>
-                            <a class="font-w600" href="frontend_pricing.html">Pricing</a>
-                        </li>
-                        <li>
-                            <a class="font-w600" href="frontend_about.html">About Us</a>
-                        </li>
-                        <li>
-                            <a class="font-w600" href="frontend_contact.html">Contact Us</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-4">
-                    <h3 class="h5 font-w600 text-uppercase push-20">Support</h3>
-                    <ul class="list list-simple-mini font-s13">
-                        <li>
-                            <a class="font-w600" href="frontend_login.html">Log In</a>
-                        </li>
-                        <li>
-                            <a class="font-w600" href="frontend_signup.html">Sign Up</a>
-                        </li>
-                        <li>
-                            <a class="font-w600" href="frontend_support.html">Support Center</a>
-                        </li>
-                        <li>
-                            <a class="font-w600" href="javascript:void(0)">Privacy Policy</a>
-                        </li>
-                        <li>
-                            <a class="font-w600" href="javascript:void(0)">Terms &amp; Conditions</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-sm-4">
-                    <h3 class="h5 font-w600 text-uppercase push-20">Get In Touch</h3>
-                    <div class="font-s13 push">
-                        <strong>Company, Inc.</strong><br>
-                        980 Folsom Ave, Suite 1230<br>
-                        San Francisco, CA 94107<br>
-                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                    </div>
-                    <div class="font-s13">
-                        <i class="si si-envelope-open"></i> company@example.com
-                    </div>
-                </div>
-            </div>
-            <!-- END Footer Navigation -->
-
-            <!-- Copyright Info -->
-            <div class="font-s12 push-20 clearfix">
-                <hr class="remove-margin-t">
-                <div class="pull-left">
-                    &copy; <span class="js-year-copy"></span> -
-                    Developed by: <span class="font-w600">S. Alaimo, Ph.D.</span> - Template:
-                    <a class="font-w600" href="http://goo.gl/6LF10W" target="_blank">OneUI 3.0</a> by
-                    <a class="font-w600" href="http://goo.gl/vNS3I" target="_blank">pixelcave</a>
-                </div>
-            </div>
-            <!-- END Copyright Info -->
-        </div>
-    </footer>--}}
     <!-- END Footer -->
 </div>
 <!-- END Page Container -->

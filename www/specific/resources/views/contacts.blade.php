@@ -13,9 +13,9 @@
                                         Salvatore Alaimo
                                     </h4>
                                     <p class="push-20">
-                                        Affiliation<br>
-                                        Affiliation<br>
-                                        E-Mail
+                                        Bioinformatics Unit<br>
+                                        Department of Clinical and Experimental Medicine<br>
+                                        University of Catania, Italy
                                     </p>
                                 </div>
                             </div>
@@ -29,9 +29,9 @@
                                         Gioacchino Paolo Marceca
                                     </h4>
                                     <p class="push-20">
-                                        Affiliation<br>
-                                        Affiliation<br>
-                                        E-Mail
+                                        Bioinformatics Unit<br>
+                                        Department of Clinical and Experimental Medicine<br>
+                                        University of Catania, Italy
                                     </p>
                                 </div>
                             </div>
@@ -45,9 +45,9 @@
                                         Ferro Alfredo
                                     </h4>
                                     <p class="push-20">
-                                        Affiliation<br>
-                                        Affiliation<br>
-                                        E-Mail
+                                        Bioinformatics Unit<br>
+                                        Department of Clinical and Experimental Medicine<br>
+                                        University of Catania, Italy
                                     </p>
                                 </div>
                             </div>
@@ -61,9 +61,9 @@
                                         Pulvirenti Alfredo
                                     </h4>
                                     <p class="push-20">
-                                        Affiliation<br>
-                                        Affiliation<br>
-                                        E-Mail
+                                        Bioinformatics Unit<br>
+                                        Department of Clinical and Experimental Medicine<br>
+                                        University of Catania, Italy
                                     </p>
                                 </div>
                             </div>

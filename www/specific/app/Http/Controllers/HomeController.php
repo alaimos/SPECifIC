@@ -107,11 +107,7 @@ class HomeController extends Controller
         });
         $query->join($diseaseTable, 'nodes.id', '=', $diseaseTable . '.node_id');
         $query->where($diseaseForeign, '=', $disease->id);
-        /*$query->whereIn('id', function (QueryBuilder $query) use ($disease, $diseaseTable, $diseaseForeign) {
-            $query->select('node_id')
-                ->from($diseaseTable)
-                ->where($diseaseForeign, '=', $disease->id);
-        });*/
+        $query->orderBy('nodes.accession');
         return $query->paginate($perPage, ['accession', 'name', 'perturbation', 'pvalue']);
     }
 

@@ -153,22 +153,15 @@
             <div class="row push-50">
                 <div class="col-sm-6 col-sm-offset-3 nice-copy-story">
                     <p class="text-justify">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida nunc vitae dolor interdum,
-                        vel dapibus nulla posuere. Curabitur rutrum leo et diam mollis tristique. Nam tempor consectetur
-                        rhoncus. Praesent nibh mi, rutrum ut posuere ac, commodo vel nulla. Donec blandit leo odio, at
-                        sagittis quam malesuada vitae. Donec rutrum feugiat tellus vitae pretium. Integer eget faucibus
-                        orci. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                        Integer bibendum malesuada enim, eget congue dui congue eget. Nam ultricies enim non turpis
-                        aliquet blandit. Sed at elit ac eros finibus porta vitae eget lectus. Ut lacinia rhoncus ex.
-                        Proin a eros et sem malesuada dapibus.
+                        In the era of network medicine, pathway perturbation analysis methods play a central role in the
+                        prediction of phenotype from high throughput experiments. SPECifIC is a network-based systems
+                        biology tool capable of extracting disease-perturbed subpathways within pathway networks in
+                        connection with expression data.
                     </p>
                     <p class="text-justify">
-                        Proin vel nunc dui. Nulla facilisi. Vivamus consequat scelerisque vestibulum. Nam tempor lacus
-                        in interdum mollis. Vestibulum vehicula nulla dapibus turpis eleifend imperdiet. Sed at lectus
-                        sodales, laoreet purus non, molestie neque. Sed dignissim maximus ipsum eu condimentum.
-                        Suspendisse sit amet hendrerit quam. Ut a tristique tellus, id convallis nisi. Cras a nulla id
-                        dolor tincidunt dignissim ut in magna. Morbi viverra risus lacus, vitae sagittis tortor luctus
-                        at. Aliquam auctor feugiat magna.
+                        Our system extends pathways with missing regulatory elements, such as microRNAs, and their
+                        interactions with genes. The framework enables the extraction, visualization, and analysis of
+                        statistically significant disease-specific subpathways computed on a meta-pathway.
                     </p>
                 </div>
             </div>

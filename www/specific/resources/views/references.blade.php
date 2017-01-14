@@ -14,16 +14,9 @@
                                     </p>
                                     <div class="well">
                                         <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida nunc
-                                            vitae dolor interdum, vel dapibus nulla posuere. Curabitur rutrum leo et
-                                            diam mollis tristique. Nam tempor consectetur rhoncus. Praesent nibh mi,
-                                            rutrum ut posuere ac, commodo vel nulla. Donec blandit leo odio, at sagittis
-                                            quam malesuada vitae. Donec rutrum feugiat tellus vitae pretium. Integer
-                                            eget faucibus orci. Cum sociis natoque penatibus et magnis dis parturient
-                                            montes, nascetur ridiculus mus. Integer bibendum malesuada enim, eget congue
-                                            dui congue eget. Nam ultricies enim non turpis aliquet blandit. Sed at elit
-                                            ac eros finibus porta vitae eget lectus. Ut lacinia rhoncus ex. Proin a eros
-                                            et sem malesuada dapibus.
+                                            S. Alaimo, G. P. Marceca, A. Ferro, and A. Pulvirenti.
+                                            <span class="font-w600">Detecting disease specific pathway substructures through an integrated systems biology approach</span>.
+                                            2017
                                         </p>
                                     </div>
                                 </div>
