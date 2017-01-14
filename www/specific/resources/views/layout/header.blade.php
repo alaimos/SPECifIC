@@ -16,8 +16,8 @@
     <!-- <link rel="shortcut icon" href="assets/img/favicons/favicon.png"> -->
     <!-- END Icons -->
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ elixir('css/all.css') }}">
-    <link rel="stylesheet" href="{{ elixir('css/app.css') }}">
+    <link rel="stylesheet" href="{{ url('css/all.css') }}">
+    <link rel="stylesheet" href="{{ url('css/app.css') }}">
     @stack('head')
 </head>
 <body>
