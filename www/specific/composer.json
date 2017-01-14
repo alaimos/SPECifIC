@@ -10,7 +10,6 @@
     "barryvdh/laravel-ide-helper":     "^2.2",
     "doctrine/dbal":                   "^2.5",
     "pda/pheanstalk":                  "3.0",
-    "spatie/laravel-backup":           "^4.3",
     "guzzlehttp/guzzle":               "^6.2",
     "barryvdh/laravel-debugbar":       "^2.3",
     "laravelcollective/html":          "^5.3",
