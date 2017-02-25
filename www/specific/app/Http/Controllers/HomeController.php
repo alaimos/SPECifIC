@@ -7,7 +7,6 @@ use App\Models\Disease;
 use App\Models\Job;
 use App\Models\Node;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -17,10 +16,15 @@ class HomeController extends Controller
      * Parse a list of nodes
      *
      * @param array|string $node
+     *
      * @return string
      */
     protected function parseNode($node)
     {
+        if ($node === null || empty($node)) {
+            /* @TODO Should this event be handeled differently? */
+            return '';
+        }
         static $nodeMap = [];
         if (is_array($node)) {
             $tmp = [];
@@ -50,7 +54,7 @@ class HomeController extends Controller
             'diseases' => Disease::all()->pluck('description', 'short_name'),
             'nodes'    => Node::all()->mapWithKeys(function ($e) {
                 return [$e->accession => $e->accession . ' - ' . $e->name];
-            })
+            }),
         ]);
     }
 
@@ -64,14 +68,14 @@ class HomeController extends Controller
             },
             'getNois'    => function (Job $job) {
                 return $this->parseNode($job->getParameter('nodesOfInterest', []));
-            }
+            },
         ]);
     }
 
     public function submitHistory(Request $request)
     {
         $this->validate($request, [
-            'jobIdentifier' => 'required|alpha_num|max:32|exists:jobs,job_key'
+            'jobIdentifier' => 'required|alpha_num|max:32|exists:jobs,job_key',
         ]);
         return redirect()->route('extraction-results', ['jobKey' => $request->get('jobIdentifier')]);
     }
@@ -80,6 +84,7 @@ class HomeController extends Controller
      * Handles searching, pagination, and listing of disease-specific NoIs
      *
      * @param Request $request
+     *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Http\JsonResponse
      */
     public function listNodesOfInterest(Request $request)
@@ -96,7 +101,7 @@ class HomeController extends Controller
                 'per_page'     => $perPage,
                 'current_page' => 0,
                 'last_page'    => 0,
-                'data'         => []
+                'data'         => [],
             ]);
         }
         /** @var Builder $query */
@@ -116,6 +121,7 @@ class HomeController extends Controller
      *
      * @param float|null $pValue
      * @param float      $default
+     *
      * @return float
      */
     protected function checkPValue($pValue, $default = 0.05)
@@ -134,34 +140,48 @@ class HomeController extends Controller
      * Submit extraction job
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function submitExtractionJob(Request $request)
     {
         $this->validate($request, [
-            'disease'          => 'required|exists:diseases,short_name',
-            'nois'             => 'required|array|exists:nodes,accession',
-            'max-pvalue'       => 'present|numeric',
-            'max-pvalue-annot' => 'present|numeric',
-            'min-num-nodes'    => 'present|numeric',
-            'backward-visit'   => 'sometimes|boolean',
+            'disease'             => 'required|exists:diseases,short_name',
+            'nois'                => 'sometimes|array|exists:nodes,accession',
+            'max-pvalue'          => 'present|numeric',
+            'max-pvalue-pathways' => 'present|numeric',
+            'max-pvalue-nois'     => 'present|numeric',
+            'max-pvalue-nodes'    => 'present|numeric',
+            'max-pvalue-annot'    => 'present|numeric',
+            'min-num-nodes'       => 'present|numeric',
+            'backward-visit'      => 'sometimes|boolean',
         ]);
         $disease = $request->get('disease');
-        $NoIs = array_unique($request->get('nois'));
-        sort($NoIs);
-        $maxPV = $this->checkPValue($request->get('max-pvalue'));
-        $maxPVAnnot = $this->checkPValue($request->get('max-pvalue-annot'));
+        $NoIs = $request->get('nois');
+        if (!is_array($NoIs) || empty($NoIs)) {
+            $NoIs = null;
+        } else {
+            $NoIs = array_unique($NoIs);
+            sort($NoIs);
+        }
+        $maxPV = $this->checkPValue($request->get('max-pvalue', 1e-5));
+        $maxPVPathways = $this->checkPValue($request->get('max-pvalue-pathways', 0.01));
+        $maxPVNois = $this->checkPValue($request->get('max-pvalue-nois', 0.05));
+        $maxPVNodes = $this->checkPValue($request->get('max-pvalue-nodes', 0.10));
+        $maxPVAnnot = $this->checkPValue($request->get('max-pvalue-annot', 0.05));
         $isBackward = intval($request->get('backward-visit', 0)) == 1;
         $minNumNodes = (int)$request->get('min-num-nodes');
         $jobType = 'extract_sub_structures';
         $jobParameters = [
             'disease'             => $disease,
             'nodesOfInterest'     => $NoIs,
+            'pathwaysMaxPValue'   => $maxPVPathways,
+            'noIsMaxPValue'       => $maxPVNois,
+            'nodesMaxPValue'      => $maxPVNodes,
             'extractionMaxPValue' => $maxPV,
             'annotationMaxPValue' => $maxPVAnnot,
             'minNumberOfNodes'    => $minNumNodes,
-            'combiner'            => 'fisher',
-            'backward'            => $isBackward
+            'backward'            => $isBackward,
         ];
         $jobKey = Job::computeKey($jobType, $jobParameters);
         $job = Job::whereJobKey($jobKey)->first();
@@ -171,7 +191,7 @@ class HomeController extends Controller
                 'job_status'     => Job::QUEUED,
                 'job_parameters' => $jobParameters,
                 'job_data'       => [],
-                'job_log'        => ''
+                'job_log'        => '',
             ]);
             $this->dispatch(new DispatcherJob($job->id));
         }

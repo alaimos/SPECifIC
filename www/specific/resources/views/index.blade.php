@@ -60,11 +60,12 @@
                                     <div class="tab-pane push-50-t push-50" id="submission-form-step2">
                                         <div class="form-group">
                                             <div class="col-sm-8 col-sm-offset-2">
-                                                <label for="submission-form-select-noi">Select one or more nodes of
-                                                    interest</label>
+                                                <label for="submission-form-select-noi">Choose one or more nodes of
+                                                    interest. If no nodes are chosen an automated selection procedure
+                                                    will be used.</label>
                                                 <div class="row">
                                                     <div class="col-sm-12">
-                                                        <select class="form-control" required
+                                                        <select class="form-control"
                                                                 id="submission-form-select-noi" name="nois[]" multiple>
                                                         </select>
                                                     </div>
@@ -77,18 +78,18 @@
                                     <div class="tab-pane push-5-t push-10" id="submission-form-step3">
                                         <div class="form-group">
                                             <label class="col-md-4 control-label" for="submission-form-max-pvalue">
-                                                Extraction Max p-value
+                                                Subpathways max p-value
                                             </label>
                                             <div class="col-md-8">
                                                 <input class="form-control" type="number"
                                                        id="submission-form-max-pvalue" name="max-pvalue" step="any"
-                                                       value="0.05">
+                                                       value="0.00001">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-4 control-label"
                                                    for="submission-form-max-pvalue-annot">
-                                                Annotation Max p-value
+                                                Annotation max p-value
                                             </label>
                                             <div class="col-md-8">
                                                 <input class="form-control" type="number"
@@ -97,22 +98,65 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-4 control-label" for="submission-form-min-num-nodes">
-                                                Min number of nodes
-                                            </label>
-                                            <div class="col-md-8">
-                                                <input class="form-control" type="number"
-                                                       id="submission-form-min-num-nodes"
-                                                       name="min-num-nodes" value="5">
+                                            <div class="col-sm-8 col-sm-offset-4">
+                                                <a href="#form-advanced-options" role="button" data-toggle="collapse"
+                                                   aria-expanded="false" aria-controls="form-advanced-options">Advanced options...</a>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-8 col-sm-offset-4">
-                                                <label class="css-input switch switch-sm switch-primary"
-                                                       for="submission-form-backward-visit">
-                                                    <input type="checkbox" id="submission-form-backward-visit"
-                                                           name="backward-visit"><span></span> Backward visit
+                                        <div class="collapse" id="form-advanced-options">
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label"
+                                                       for="submission-form-max-pvalue-pathway">
+                                                    Pathways Max p-value
                                                 </label>
+                                                <div class="col-md-8">
+                                                    <input class="form-control" type="number"
+                                                           id="submission-form-max-pvalue-pathway"
+                                                           name="max-pvalue-pathways" step="any"
+                                                           value="0.01">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label"
+                                                       for="submission-form-max-pvalue-nois">
+                                                    NoIs max p-value
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <input class="form-control" type="number"
+                                                           id="submission-form-max-pvalue-nois" name="max-pvalue-nois"
+                                                           step="any" value="0.05">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label"
+                                                       for="submission-form-max-pvalue-nodes">
+                                                    Nodes max p-value
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <input class="form-control" type="number"
+                                                           id="submission-form-max-pvalue-nodes" name="max-pvalue-nodes"
+                                                           step="any" value="0.10">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label"
+                                                       for="submission-form-min-num-nodes">
+                                                    Min number of nodes
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <input class="form-control" type="number"
+                                                           id="submission-form-min-num-nodes"
+                                                           name="min-num-nodes" value="5">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-8 col-sm-offset-4">
+                                                    <label class="css-input switch switch-sm switch-primary"
+                                                           for="submission-form-backward-visit">
+                                                        <input type="checkbox" id="submission-form-backward-visit"
+                                                               name="backward-visit"><span></span> Backward visit
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -43,13 +43,13 @@ class ImportDiseases extends Command
                 continue;
             }
             $fields = explode("\t", $line);
-            if (count($fields) == 6) {
+            if (count($fields) == 7) {
                 $geneAccession = $fields[2];
                 if (isset($nodesMap[$geneAccession])) {
                     $geneId = $nodesMap[$geneAccession];
-                    $perturbation = doubleval($fields[4]);
+                    $perturbation = doubleval($fields[5]);
                     if (!$disease->perturbations()->find($geneId) && $perturbation != 0.0) {
-                        $pv = doubleval($fields[5]);
+                        $pv = doubleval($fields[6]);
                         $disease->perturbations()->attach($geneId, [
                             'perturbation' => $perturbation,
                             'pvalue'       => $pv,
