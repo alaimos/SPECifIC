@@ -22,8 +22,7 @@ class HomeController extends Controller
     protected function parseNode($node)
     {
         if ($node === null || empty($node)) {
-            /* @TODO Should this event be handeled differently? */
-            return '';
+            return 'Automated Selection';
         }
         static $nodeMap = [];
         if (is_array($node)) {

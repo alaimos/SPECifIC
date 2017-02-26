@@ -263,7 +263,8 @@
 @push('inline-scripts')
 <script>
     $(function () {
-        $('.js-dataTable-full').dataTable({
+        var $table = $('.js-dataTable-full');
+        $table.dataTable({
             columnDefs: [],
             pageLength: 10,
             lengthMenu: [[5, 10, 15, 20], [5, 10, 15, 20]]
@@ -322,7 +323,7 @@
                 });
             }
         });
-        $('.search-accession').click(function () {
+        $table.on('click', '.search-accession', function () {
             var id = $(this).data('id');
             $('.js-dataTable-structures').find('tfoot').find('th > input').first().val(id).change();
         });

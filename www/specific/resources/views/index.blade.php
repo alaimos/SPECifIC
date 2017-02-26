@@ -83,7 +83,7 @@
                                             <div class="col-md-8">
                                                 <input class="form-control" type="number"
                                                        id="submission-form-max-pvalue" name="max-pvalue" step="any"
-                                                       value="0.00001">
+                                                       value="0.000001">
                                             </div>
                                         </div>
                                         <div class="form-group">

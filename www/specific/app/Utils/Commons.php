@@ -4,35 +4,39 @@ namespace App\Utils;
 
 use App\Exceptions\AnnotateException;
 use App\Exceptions\CommandException;
-use App\Exceptions\ExportSubStructuresException;
 use App\Models\Disease;
 use App\Models\Node;
 
 final class Commons
 {
-    const R_EXEC = 'Rscript %1$s %2$s';
-    const R_MAKE_HEATMAP = 'bin/R/makeHeatmap.R';
-    const R_MAKE_HEATMAP_PARAMETERS = '-c %1$s -t %2$s -s %3$s -o %4$s';
-    const R_ANNOTATE = 'bin/R/annotate.R';
-    const R_ANNOTATE_PARAMETERS = '-l %1$s -p %2$f -a %3$s -o %4$s';
+    const R_EXEC                      = 'Rscript %1$s %2$s';
+    const R_MAKE_HEATMAP              = 'bin/R/makeHeatmap.R';
+    const R_MAKE_HEATMAP_PARAMETERS   = '-c %1$s -t %2$s -s %3$s -o %4$s';
+    const R_ANNOTATE                  = 'bin/R/annotate.R';
+    const R_ANNOTATE_PARAMETERS       = '-l %1$s -p %2$f -a %3$s -o %4$s';
     const EXCLUDED_PATHWAY_CATEGORIES = [
         'Endocrine and metabolic diseases',
         'Neurodegenerative diseases',
         'Human Diseases',
         'Immune diseases',
         'Infectious diseases',
-        'Cardiovascular diseases'
+        'Cardiovascular diseases',
     ];
-    const MITHRIL_EXPORT_PARAMETERS = '-b -verbose -organism hsa -i %1$s -o %2$s -s %3$s' .
-                                      ' -max-pvalue %4$f -min-number-of-nodes %5$d -combiner %6$s %7$s' .
-                                      ' -exclude-categories %8$s';
-    const MITHRIL_JAR = 'bin/MITHrIL2.jar';
-    const MITHRIL_EXEC = 'java -jar %1$s %2$s %3$s';
+    const DATA_FILE                   = 'data/all_perturbations.txt.gz';
+    const MITHRIL_BACKWARD_VISIT      = '-backward';
+    const MITHRIL_NODES_OF_INTERESTS  = '-s %s';
+    const MITHRIL_EXPORT_PARAMETERS   = '-b -verbose -organism hsa -i %1$s -o %2$s' .
+                                        ' -max-pvalue-paths %3$.7f -min-number-of-nodes %4$.7d' .
+                                        ' -max-pvalue-pathways %5$.7f -max-pvalue-nodes %6$.7f' .
+                                        ' -max-pvalue-nois %7$.7f  -exclude-categories %8$s -d %9$s %10$s';
+    const MITHRIL_JAR                 = 'bin/MITHrIL2.jar';
+    const MITHRIL_EXEC                = 'java -jar %1$s %2$s %3$s';
 
     /**
      * Get name for control data of a disease
      *
      * @param Disease $disease
+     *
      * @return string
      */
     public static function getDiseaseControl(Disease $disease)
@@ -49,6 +53,7 @@ final class Commons
      *
      * @param Disease $disease
      * @param bool    $control
+     *
      * @return string
      */
     public static function getExpressionPath(Disease $disease, $control = false)
@@ -61,6 +66,7 @@ final class Commons
      * Get thr path of the MITHrIL 2 input file for a disease
      *
      * @param Disease $disease
+     *
      * @return string
      */
     public static function getMithrilInputPath(Disease $disease)
@@ -74,6 +80,7 @@ final class Commons
      *
      * @param Disease $disease
      * @param array   $selection
+     *
      * @return string
      */
     public static function makeHeatmap(Disease $disease, array $selection)
@@ -114,6 +121,7 @@ final class Commons
      * @param array  $list
      * @param float  $maxPValue
      * @param string $pvAdjust
+     *
      * @return string
      * @throws AnnotateException
      */
@@ -157,36 +165,45 @@ final class Commons
     /**
      * Run MITHrIL 2 to extract SubStructures
      *
-     * @param Disease    $disease
-     * @param string     $outputFile
-     * @param array      $nodesOfInterest
-     * @param float      $maxPValue
-     * @param int        $minNumberOfNodes
-     * @param string     $combiner
-     * @param bool       $backward
-     * @param array|null $commandOutput
+     * @param \App\Models\Disease $disease
+     * @param string              $outputFile
+     * @param array|null          $nodesOfInterest
+     * @param float               $maxPValuePathways
+     * @param float               $maxPValueNoIs
+     * @param float               $maxPValueNodes
+     * @param float               $maxPValuePaths
+     * @param int                 $minNumberOfNodes
+     * @param bool                $backward
+     * @param array|null          $commandOutput
+     *
      * @return bool
      */
-    public static function exportSubStructures(Disease $disease, $outputFile, array $nodesOfInterest,
-        $maxPValue = 0.05, $minNumberOfNodes = 5, $combiner = "fisher", $backward = false, array &$commandOutput = null)
+    public static function exportSubStructures(Disease $disease, $outputFile, array $nodesOfInterest = null,
+        $maxPValuePathways = 0.01, $maxPValueNoIs = 0.025, $maxPValueNodes = 0.05, $maxPValuePaths = 1e-5,
+        $minNumberOfNodes = 5, $backward = false, array &$commandOutput = null)
     {
-        if (!count($nodesOfInterest)) {
-            throw new ExportSubStructuresException('List of nodes of interest is empty.');
+        $hasNoIs = false;
+        if ($nodesOfInterest !== null && !empty($nodesOfInterest)) {
+            $hasNoIs = true;
+            $nodesOfInterest = array_map(function ($e) {
+                if ($e instanceof Node) {
+                    return $e->accession;
+                }
+                return $e;
+            }, $nodesOfInterest);
+            $nodesOfInterest = escapeshellarg(implode(',', $nodesOfInterest));
         }
-        $nodesOfInterest = array_map(function ($e) {
-            if ($e instanceof Node) {
-                return $e->accession;
-            }
-            return $e;
-        }, $nodesOfInterest);
+        $optionalCommandLine = [];
+        $optionalCommandLine[] = ($hasNoIs) ? sprintf(self::MITHRIL_NODES_OF_INTERESTS, $nodesOfInterest) : '';
+        $optionalCommandLine[] = ($backward) ? self::MITHRIL_BACKWARD_VISIT : '';
+        $optionalCommandLine = implode(' ', $optionalCommandLine);
         $inputFile = escapeshellarg(self::getMithrilInputPath($disease));
-        $nodesOfInterest = escapeshellarg(implode(',', $nodesOfInterest));
         $outputFile = escapeshellarg($outputFile);
-        $combiner = escapeshellarg($combiner);
-        $backward = ($backward) ? '-backward' : '';
+        $dataFile = escapeshellcmd(resource_path(self::DATA_FILE));
         $excluded = escapeshellarg(implode(',', self::EXCLUDED_PATHWAY_CATEGORIES));
-        $parameters = sprintf(self::MITHRIL_EXPORT_PARAMETERS, $inputFile, $outputFile, $nodesOfInterest, $maxPValue,
-            $minNumberOfNodes, $combiner, $backward, $excluded);
+        $parameters = sprintf(self::MITHRIL_EXPORT_PARAMETERS, $inputFile, $outputFile, $maxPValuePaths,
+            $minNumberOfNodes, $maxPValuePathways, $maxPValueNodes, $maxPValueNoIs, $excluded, $dataFile,
+            $optionalCommandLine);
         $command = sprintf(self::MITHRIL_EXEC, resource_path(self::MITHRIL_JAR), 'exportstructs', $parameters);
         return Utils::runCommand($command, $commandOutput);
     }

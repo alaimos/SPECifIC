@@ -18,10 +18,15 @@ class ExtractionResultController extends Controller
      * Parse a list of nodes
      *
      * @param array|string $node
+     *
      * @return string
      */
     protected function parseNode($node)
     {
+        if ($node === null || empty($node)) {
+            /* @TODO Should this event be handeled differently? */
+            return '';
+        }
         static $nodeMap = [];
         if (is_array($node)) {
             $tmp = [];
@@ -44,6 +49,7 @@ class ExtractionResultController extends Controller
      * Read the list of structures
      *
      * @param string $structuresFile
+     *
      * @return Collection
      */
     protected function readStructuresList($structuresFile)
@@ -80,6 +86,7 @@ class ExtractionResultController extends Controller
      *
      * @param Request $request
      * @param string  $jobKey
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function viewExtractionResult(Request $request, $jobKey)
@@ -111,7 +118,10 @@ class ExtractionResultController extends Controller
             ]);
         } else {
             $subStructuresFile = $jobData->getData('subStructures');
-            $numOfStructures = intval(exec('wc -l ' . escapeshellarg($subStructuresFile)));
+            if (!$NoIs->count()) {
+                $NoIs = Node::whereIn('accession', $jobData->getData('nodesOfInterest', []))->get();
+            }
+            $numOfStructures = intval(exec('wc -l ' . escapeshellarg($subStructuresFile))) - 1;
             return view('analysis.extraction.job_view', [
                 'jobData'       => $jobData,
                 'disease'       => Disease::whereShortName($jobData->getParameter('disease'))->first()->description,
@@ -126,6 +136,7 @@ class ExtractionResultController extends Controller
      *
      * @param Request $request
      * @param string  $jobKey
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function listStructuresData(Request $request, $jobKey)
@@ -152,7 +163,7 @@ class ExtractionResultController extends Controller
                          ->addColumn('actions', function ($data) use ($jobData) {
                              return view('analysis.extraction.substructures_actions', [
                                  'struct'  => $data,
-                                 'jobData' => $jobData
+                                 'jobData' => $jobData,
                              ])->render();
                          })
                          ->setRowId('{{$id}}')->make(true);
@@ -162,6 +173,7 @@ class ExtractionResultController extends Controller
      * Download structures
      *
      * @param string $jobKey
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function download($jobKey)
@@ -179,6 +191,7 @@ class ExtractionResultController extends Controller
      *
      * @param Job $jobData
      * @param int $needle
+     *
      * @return array|null
      */
     public function findStructure(Job $jobData, $needle)
@@ -220,6 +233,7 @@ class ExtractionResultController extends Controller
      *
      * @param $jobKey
      * @param $id
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function runEnrichment($jobKey, $id)
@@ -246,7 +260,7 @@ class ExtractionResultController extends Controller
                 'job_status'     => Job::QUEUED,
                 'job_parameters' => $jobParameters,
                 'job_data'       => [],
-                'job_log'        => ''
+                'job_log'        => '',
             ]);
             $this->dispatchNow(new DispatcherJob($enrichmentJob->id));
         }

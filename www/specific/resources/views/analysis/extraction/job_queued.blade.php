@@ -45,7 +45,7 @@
                             </div>
                             <div class="block-content block-content-full block-content-mini">
                                 <span class="font-w600 text-uppercase"><span
-                                            class="badge badge-default pull-right">{{ $nois->count() }}</span> Nodes of Interest</span>
+                                            class="badge badge-default pull-right">{{ (($count=$nois->count()) == 0) ? 'Auto' : $count }}</span> Nodes of Interest</span>
                             </div>
                         </a>
                     </div>
