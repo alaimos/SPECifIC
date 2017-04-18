@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\DispatcherJob;
 use App\Models\Job;
 use Illuminate\Console\Command;
 
@@ -36,9 +37,13 @@ class RunFailed extends Command
      */
     public function handle()
     {
-        $jobs = Job::whereJobStatus(Job::FAILED)->all();
+        $jobs = Job::whereJobStatus(Job::FAILED)->get();
         foreach ($jobs as $job) {
-            dd($job);
+            /** @var Job $job */
+            $job->job_status = Job::QUEUED;
+            $job->job_log = '';
+            $job->save();
+            dispatch(new DispatcherJob($job->id));
         }
         return 0;
     }
