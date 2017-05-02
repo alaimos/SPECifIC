@@ -15,8 +15,9 @@
                                     <div class="well">
                                         <p>
                                             S. Alaimo, G. P. Marceca, A. Ferro, and A. Pulvirenti.
-                                            <span class="font-w600">Detecting disease specific pathway substructures through an integrated systems biology approach</span>.
-                                            2017
+                                            <span class="font-w600">Detecting Disease Specific Pathway Substructures through an Integrated Systems Biology Approach</span>.
+                                            Non-Coding RNA 3.2 (2017): 20
+                                            DOI: 10.3390/ncrna3020020
                                         </p>
                                     </div>
                                 </div>
